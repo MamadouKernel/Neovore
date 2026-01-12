@@ -150,6 +150,81 @@
 
         <div class="col-12 mt-4">
           <h3 class="h5 fw-bold mb-3">
+            <i class="bi bi-palette me-2" style="color: #FF6B35;"></i>Personnalisation des couleurs
+          </h3>
+          <p class="text-muted small mb-3">Personnalisez les couleurs principales de votre site. Les couleurs seront appliquées immédiatement après sauvegarde.</p>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">
+            <i class="bi bi-circle-fill me-2" style="color: @(Model.CouleurPrimaire ?? "#FF6B35");"></i>Couleur primaire
+          </label>
+          <div class="input-group">
+            <input type="color" asp-for="CouleurPrimaire" class="form-control form-control-color" value="@(Model.CouleurPrimaire ?? "#FF6B35")" title="Choisir la couleur primaire" />
+            <input type="text" asp-for="CouleurPrimaire" class="form-control" placeholder="#FF6B35" pattern="^#[0-9A-Fa-f]{6}$" />
+          </div>
+          <small class="text-muted">Couleur principale utilisée pour les boutons, liens et éléments importants</small>
+          <span asp-validation-for="CouleurPrimaire" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">
+            <i class="bi bi-circle-fill me-2" style="color: @(Model.CouleurSecondaire ?? "#E63946");"></i>Couleur secondaire
+          </label>
+          <div class="input-group">
+            <input type="color" asp-for="CouleurSecondaire" class="form-control form-control-color" value="@(Model.CouleurSecondaire ?? "#E63946")" title="Choisir la couleur secondaire" />
+            <input type="text" asp-for="CouleurSecondaire" class="form-control" placeholder="#E63946" pattern="^#[0-9A-Fa-f]{6}$" />
+          </div>
+          <small class="text-muted">Couleur utilisée pour les éléments secondaires et les accents</small>
+          <span asp-validation-for="CouleurSecondaire" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">
+            <i class="bi bi-circle-fill me-2" style="color: @(Model.CouleurAccent ?? "#1E88E5");"></i>Couleur d'accent
+          </label>
+          <div class="input-group">
+            <input type="color" asp-for="CouleurAccent" class="form-control form-control-color" value="@(Model.CouleurAccent ?? "#1E88E5")" title="Choisir la couleur d'accent" />
+            <input type="text" asp-for="CouleurAccent" class="form-control" placeholder="#1E88E5" pattern="^#[0-9A-Fa-f]{6}$" />
+          </div>
+          <small class="text-muted">Couleur utilisée pour les éléments d'accentuation et les liens</small>
+          <span asp-validation-for="CouleurAccent" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">
+            <i class="bi bi-circle-fill me-2" style="color: @(Model.CouleurOr ?? "#dbb438");"></i>Couleur or
+          </label>
+          <div class="input-group">
+            <input type="color" asp-for="CouleurOr" class="form-control form-control-color" value="@(Model.CouleurOr ?? "#dbb438")" title="Choisir la couleur or" />
+            <input type="text" asp-for="CouleurOr" class="form-control" placeholder="#dbb438" pattern="^#[0-9A-Fa-f]{6}$" />
+          </div>
+          <small class="text-muted">Couleur or utilisée pour les éléments premium et les highlights</small>
+          <span asp-validation-for="CouleurOr" class="text-danger small"></span>
+        </div>
+
+        <div class="col-12 mt-4">
+          <h3 class="h5 fw-bold mb-3">
+            <i class="bi bi-sun-moon me-2" style="color: #FF6B35;"></i>Mode d'affichage
+          </h3>
+        </div>
+
+        <div class="col-12">
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" asp-for="ModeSombre" id="modeSombre" style="width: 3rem; height: 1.5rem; cursor: pointer;" />
+            <label class="form-check-label fw-bold" for="modeSombre">
+              <i class="bi bi-moon-stars-fill me-2"></i>Mode nuit
+              <span class="badge bg-secondary ms-2" id="modeStatus">Actuellement: <i class="bi bi-sun-fill"></i> Mode jour</span>
+            </label>
+            <div class="form-text">
+              <strong>Mode jour</strong> : Thème clair par défaut, idéal pour une utilisation en journée.<br/>
+              <strong>Mode nuit</strong> : Thème sombre pour un confort visuel optimal, notamment en faible luminosité ou le soir.
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 mt-4">
+          <h3 class="h5 fw-bold mb-3">
             <i class="bi bi-search me-2" style="color: #FF6B35;"></i>SEO (Référencement)
           </h3>
         </div>
@@ -183,4 +258,52 @@
 
 @section Scripts {
   <partial name="_ValidationScriptsPartial" />
+  <script>
+    // Synchronisation entre le sélecteur de couleur et le champ texte
+    document.addEventListener('DOMContentLoaded', function() {
+      const colorInputs = document.querySelectorAll('input[type="color"]');
+      
+      colorInputs.forEach(colorInput => {
+        const textInput = colorInput.parentElement.querySelector('input[type="text"]');
+        
+        if (textInput) {
+          // Quand la couleur change dans le sélecteur, mettre à jour le champ texte
+          colorInput.addEventListener('input', function() {
+            textInput.value = this.value.toUpperCase();
+          });
+          
+          // Quand le texte change, mettre à jour le sélecteur (si valide)
+          textInput.addEventListener('input', function() {
+            if (/^#[0-9A-Fa-f]{6}$/.test(this.value)) {
+              colorInput.value = this.value.toUpperCase();
+            }
+          });
+          
+          // Synchroniser au chargement
+          if (textInput.value) {
+            colorInput.value = textInput.value.toUpperCase();
+          }
+        }
+      });
+      
+      // Mise à jour du badge pour le mode jour/nuit
+      const modeToggle = document.getElementById('modeSombre');
+      const modeStatus = document.getElementById('modeStatus');
+      
+      if (modeToggle && modeStatus) {
+        function updateModeStatus() {
+          if (modeToggle.checked) {
+            modeStatus.innerHTML = 'Actuellement: <i class="bi bi-moon-stars-fill"></i> Mode nuit';
+            modeStatus.className = 'badge bg-dark ms-2';
+          } else {
+            modeStatus.innerHTML = 'Actuellement: <i class="bi bi-sun-fill"></i> Mode jour';
+            modeStatus.className = 'badge bg-warning text-dark ms-2';
+          }
+        }
+        
+        modeToggle.addEventListener('change', updateModeStatus);
+        updateModeStatus(); // Initialiser au chargement
+      }
+    });
+  </script>
 }

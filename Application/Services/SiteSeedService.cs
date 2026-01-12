@@ -29,7 +29,12 @@ public class SiteSeedService
                 SeoDescriptionDefaut = "Installation électrique, groupes électrogènes, cuisine haut de gamme, froid industriel, audit énergétique.",
                 AnneesExperience = "+10",
                 ProjetsRealises = "500+",
-                SatisfactionClient = "100%"
+                SatisfactionClient = "100%",
+                CouleurPrimaire = "#FF6B35",
+                CouleurSecondaire = "#E63946",
+                CouleurAccent = "#1E88E5",
+                CouleurOr = "#dbb438",
+                ModeSombre = false
             });
         }
 

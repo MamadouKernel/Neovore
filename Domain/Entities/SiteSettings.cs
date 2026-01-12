@@ -20,4 +20,13 @@ public class SiteSettings : BaseEntity
     public string AnneesExperience { get; set; } = "+10";
     public string ProjetsRealises { get; set; } = "500+";
     public string SatisfactionClient { get; set; } = "100%";
+    
+    // Couleurs personnalisables du site
+    public string CouleurPrimaire { get; set; } = "#FF6B35";      // Orange principal
+    public string CouleurSecondaire { get; set; } = "#E63946";    // Rouge
+    public string CouleurAccent { get; set; } = "#1E88E5";        // Bleu
+    public string CouleurOr { get; set; } = "#dbb438";            // Or (selon charte graphique)
+    
+    // Mode d'affichage
+    public bool ModeSombre { get; set; } = false;                 // Mode sombre activé ou non
 }

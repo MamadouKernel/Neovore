@@ -36,25 +36,169 @@
   <link rel="stylesheet" href="/css/custom.css">
   <style>
     :root {
-      /* Palette basée sur le logo - Orange, Rouge, Bleu */
-      --color-orange: #FF6B35;
-      --color-orange-light: #FF8C42;
-      --color-red: #E63946;
-      --color-red-light: #F77F00;
-      --color-blue: #1E88E5;
-      --color-blue-dark: #1565C0;
-      --color-blue-light: #42A5F5;
+      /* Palette personnalisable - Chargée depuis les paramètres du site */
+      @{
+        var couleurPrimaire = settings?.CouleurPrimaire ?? "#FF6B35";
+        var couleurSecondaire = settings?.CouleurSecondaire ?? "#E63946";
+        var couleurAccent = settings?.CouleurAccent ?? "#1E88E5";
+        var couleurOr = settings?.CouleurOr ?? "#dbb438";
+        var modeSombre = settings?.ModeSombre ?? false;
+      }
       
-      /* Gradients principaux */
-      --gradient-primary: linear-gradient(135deg, #FF6B35 0%, #E63946 100%);
-      --gradient-secondary: linear-gradient(135deg, #E63946 0%, #F77F00 100%);
-      --gradient-accent: linear-gradient(135deg, #1E88E5 0%, #1565C0 100%);
-      --gradient-combo: linear-gradient(135deg, #FF6B35 0%, #E63946 50%, #1E88E5 100%);
+      /* Couleurs principales */
+      --color-orange: @couleurPrimaire;
+      --color-orange-light: @couleurPrimaire;
+      --color-red: @couleurSecondaire;
+      --color-red-light: @couleurSecondaire;
+      --color-blue: @couleurAccent;
+      --color-blue-dark: @couleurAccent;
+      --color-blue-light: @couleurAccent;
+      --color-gold: @couleurOr;
+      
+      /* Gradients principaux - Utilisent les couleurs personnalisées */
+      --gradient-primary: linear-gradient(135deg, @couleurPrimaire 0%, @couleurSecondaire 100%);
+      --gradient-secondary: linear-gradient(135deg, @couleurSecondaire 0%, @couleurPrimaire 100%);
+      --gradient-accent: linear-gradient(135deg, @couleurAccent 0%, @couleurAccent 100%);
+      --gradient-combo: linear-gradient(135deg, @couleurPrimaire 0%, @couleurSecondaire 50%, @couleurAccent 100%);
       
       /* Couleurs de base */
-      --primary-color: #FF6B35;
-      --primary-dark: #E63946;
-      --secondary-color: #1E88E5;
+      --primary-color: @couleurPrimaire;
+      --primary-dark: @couleurSecondaire;
+      --secondary-color: @couleurAccent;
+      --gold-color: @couleurOr;
+    }
+    
+      @if (modeSombre)
+      {
+      <text>
+      /* Mode nuit activé */
+      body {
+        background-color: #0f1419 !important;
+        color: #e4e6eb !important;
+      }
+      
+      .navbar {
+        background: rgba(15, 20, 25, 0.95) !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      
+      .navbar-brand, .nav-link {
+        color: #e4e6eb !important;
+      }
+      
+      .nav-link:hover, .nav-link.active {
+        color: var(--primary-color) !important;
+      }
+      
+      .card, .admin-card {
+        background-color: #1a1f2e !important;
+        border-color: rgba(255, 255, 255, 0.1) !important;
+        color: #e4e6eb !important;
+      }
+      
+      .card-body, .admin-card .card-body {
+        color: #e4e6eb !important;
+      }
+      
+      .form-control, .form-select {
+        background-color: #1a1f2e !important;
+        border-color: rgba(255, 255, 255, 0.2) !important;
+        color: #e4e6eb !important;
+      }
+      
+      .form-control:focus, .form-select:focus {
+        background-color: #1a1f2e !important;
+        border-color: var(--primary-color) !important;
+        color: #e4e6eb !important;
+      }
+      
+      .form-label, label {
+        color: #e4e6eb !important;
+      }
+      
+      .text-muted {
+        color: #9ca3af !important;
+      }
+      
+      footer {
+        background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%) !important;
+        color: #e4e6eb !important;
+      }
+      
+      footer .text-white-50 {
+        color: #9ca3af !important;
+      }
+      
+      .btn-outline-primary, .btn-outline-secondary {
+        border-color: rgba(255, 255, 255, 0.3) !important;
+        color: #e4e6eb !important;
+      }
+      
+      .btn-outline-primary:hover, .btn-outline-secondary:hover {
+        background-color: var(--primary-color) !important;
+        border-color: var(--primary-color) !important;
+        color: #fff !important;
+      }
+      
+      .hero-section {
+        background: linear-gradient(135deg, #1a1f2e 0%, #0f1419 100%) !important;
+        color: #e4e6eb !important;
+      }
+      
+      .stat-card {
+        background: #1a1f2e !important;
+        border-color: rgba(255, 255, 255, 0.1) !important;
+        color: #e4e6eb !important;
+      }
+      
+      h1, h2, h3, h4, h5, h6 {
+        color: #e4e6eb !important;
+      }
+      
+      p, span, div {
+        color: inherit;
+      }
+      
+      .page-header {
+        color: #e4e6eb !important;
+      }
+      
+      .page-title, .page-subtitle {
+        color: #e4e6eb !important;
+      }
+      
+      table {
+        color: #e4e6eb !important;
+      }
+      
+      .table {
+        --bs-table-bg: #1a1f2e !important;
+        --bs-table-color: #e4e6eb !important;
+        border-color: rgba(255, 255, 255, 0.1) !important;
+      }
+      
+      .table-striped > tbody > tr:nth-of-type(odd) > td {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+      }
+      
+      .alert {
+        background-color: #1a1f2e !important;
+        border-color: rgba(255, 255, 255, 0.2) !important;
+        color: #e4e6eb !important;
+      }
+      
+      .alert-success {
+        background-color: rgba(40, 167, 69, 0.2) !important;
+        border-color: rgba(40, 167, 69, 0.5) !important;
+        color: #90ee90 !important;
+      }
+      
+      .alert-danger {
+        background-color: rgba(220, 53, 69, 0.2) !important;
+        border-color: rgba(220, 53, 69, 0.5) !important;
+        color: #ff6b6b !important;
+      }
+      </text>
     }
     
     body {
@@ -268,7 +412,7 @@
     input:focus-visible,
     textarea:focus-visible,
     select:focus-visible {
-      outline: 3px solid #FF6B35;
+      outline: 3px solid var(--primary-color);
       outline-offset: 2px;
     }
   </style>

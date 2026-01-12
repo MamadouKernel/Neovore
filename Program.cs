@@ -74,24 +74,62 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.Migrate();
 
-    // Ajouter la colonne LogoUrl si elle n'existe pas (fix pour migration manquante)
+    // Ajouter les colonnes manquantes si elles n'existent pas (fix pour migrations manquantes)
     try
     {
         await db.Database.ExecuteSqlRawAsync(@"
             DO $$ 
             BEGIN 
+                -- LogoUrl
                 IF NOT EXISTS (
                     SELECT 1 FROM information_schema.columns 
                     WHERE table_name = 'SiteSettings' AND column_name = 'LogoUrl'
                 ) THEN
                     ALTER TABLE ""SiteSettings"" ADD COLUMN ""LogoUrl"" text NULL;
                 END IF;
+                
+                -- Couleurs
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns 
+                    WHERE table_name = 'SiteSettings' AND column_name = 'CouleurPrimaire'
+                ) THEN
+                    ALTER TABLE ""SiteSettings"" ADD COLUMN ""CouleurPrimaire"" text NOT NULL DEFAULT '#FF6B35';
+                END IF;
+                
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns 
+                    WHERE table_name = 'SiteSettings' AND column_name = 'CouleurSecondaire'
+                ) THEN
+                    ALTER TABLE ""SiteSettings"" ADD COLUMN ""CouleurSecondaire"" text NOT NULL DEFAULT '#E63946';
+                END IF;
+                
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns 
+                    WHERE table_name = 'SiteSettings' AND column_name = 'CouleurAccent'
+                ) THEN
+                    ALTER TABLE ""SiteSettings"" ADD COLUMN ""CouleurAccent"" text NOT NULL DEFAULT '#1E88E5';
+                END IF;
+                
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns 
+                    WHERE table_name = 'SiteSettings' AND column_name = 'CouleurOr'
+                ) THEN
+                    ALTER TABLE ""SiteSettings"" ADD COLUMN ""CouleurOr"" text NOT NULL DEFAULT '#dbb438';
+                END IF;
+                
+                -- ModeSombre
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns 
+                    WHERE table_name = 'SiteSettings' AND column_name = 'ModeSombre'
+                ) THEN
+                    ALTER TABLE ""SiteSettings"" ADD COLUMN ""ModeSombre"" boolean NOT NULL DEFAULT false;
+                END IF;
             END $$;
         ");
     }
     catch
     {
-        // Ignorer si la colonne existe déjà ou en cas d'erreur
+        // Ignorer si les colonnes existent déjà ou en cas d'erreur
     }
 
     var seeder = scope.ServiceProvider.GetRequiredService<SiteSeedService>();
