@@ -1,0 +1,107 @@
+@model Neovore.Web.Domain.Entities.Produit
+@{
+    ViewData["Title"] = Model.Nom + " - NÉOVORE";
+}
+<div class="container py-4 py-lg-5">
+  <nav aria-label="breadcrumb" class="mb-4 mb-lg-5">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/" class="text-decoration-none">Accueil</a></li>
+      <li class="breadcrumb-item"><a href="/Produits" class="text-decoration-none">Produits</a></li>
+      @if (Model.Categorie != null)
+      {
+        <li class="breadcrumb-item"><a href="/Produits?categorieId=@Model.Categorie.Id" class="text-decoration-none">@Model.Categorie.Nom</a></li>
+      }
+      <li class="breadcrumb-item active" aria-current="page">@Model.Nom</li>
+    </ol>
+  </nav>
+
+  <div class="row">
+    <div class="col-lg-10 mx-auto">
+      <a class="btn btn-outline-secondary mb-4" href="/Produits" style="border-radius: 8px;">
+        <i class="bi bi-arrow-left me-2"></i>Retour aux produits
+      </a>
+
+      <div class="row g-4 g-lg-5">
+        <!-- Images -->
+        @if (Model.Medias?.Any() == true)
+        {
+          <div class="col-md-6">
+            <div class="card border-0 shadow-sm mb-3">
+              <img src="@Model.Medias.OrderBy(x => x.Ordre).First().Url" 
+                   alt="@Model.Medias.OrderBy(x => x.Ordre).First().Alt" 
+                   class="card-img-top" 
+                   style="border-radius: 16px 16px 0 0; object-fit: cover; height: 400px;">
+            </div>
+            @if (Model.Medias.Count() > 1)
+            {
+              <div class="row g-2">
+                @foreach (var m in Model.Medias.OrderBy(x => x.Ordre).Skip(1).Take(4))
+                {
+                  <div class="col-6 col-md-3">
+                    <img class="img-fluid rounded border shadow-sm" 
+                         src="@m.Url" 
+                         alt="@m.Alt" 
+                         style="height: 100px; object-fit: cover; width: 100%; cursor: pointer;"
+                         onclick="document.querySelector('.card-img-top').src = '@m.Url'">
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+
+        <!-- Détails -->
+        <div class="col-md-6">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-body p-4">
+              @if (Model.Categorie != null)
+              {
+                <span class="badge bg-primary mb-3" style="border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.9rem;">
+                  <i class="bi bi-tag me-1"></i>@Model.Categorie.Nom
+                </span>
+              }
+              
+              <h1 class="display-5 fw-bold mb-3">@Model.Nom</h1>
+              
+              @if (!string.IsNullOrWhiteSpace(Model.Description))
+              {
+                <div class="mb-4" style="font-size: 1.1rem; line-height: 1.8; color: #495057;">
+                  @Model.Description
+                </div>
+              }
+
+              @if (!string.IsNullOrWhiteSpace(Model.Specifications))
+              {
+                <div class="mb-4">
+                  <h3 class="h5 fw-bold mb-3">
+                    <i class="bi bi-list-check me-2" style="color: #FF6B35;"></i>Spécifications
+                  </h3>
+                  <div class="bg-light border rounded p-4" style="border-radius: 12px;">
+                    <pre class="mb-0" style="white-space: pre-wrap; font-family: inherit; font-size: 0.95rem; color: #495057;">@Model.Specifications</pre>
+                  </div>
+                </div>
+              }
+
+              <div class="d-grid gap-2 mt-4">
+                <a class="btn btn-primary btn-lg" href="/devis" style="border-radius: 12px;">
+                  <i class="bi bi-file-earmark-text me-2"></i>Demander un devis
+                </a>
+                <a class="btn btn-outline-primary" href="/contact" style="border-radius: 12px;">
+                  <i class="bi bi-envelope me-2"></i>Nous contacter
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      @{
+        var commentairesVm = ViewData["CommentairesPartial"] as Neovore.Web.ViewModels.CommentairePartialVm;
+      }
+      @if (commentairesVm != null)
+      {
+        <partial name="_CommentairesPartial" model="commentairesVm" />
+      }
+    </div>
+  </div>
+</div>

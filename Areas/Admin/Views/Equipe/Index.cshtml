@@ -1,0 +1,97 @@
+@model IEnumerable<Neovore.Web.Domain.Entities.MembreEquipe>
+@{
+    ViewData["Title"] = "Équipe";
+}
+<div class="page-header">
+  <div class="d-flex justify-content-between align-items-center">
+    <div>
+      <h1 class="page-title">Membres de l'équipe</h1>
+      <p class="page-subtitle">Gérer les membres de votre équipe</p>
+    </div>
+    <a class="btn btn-primary" href="/Admin/Equipe/Create">
+      <i class="bi bi-plus-circle me-2"></i>Nouveau membre
+    </a>
+  </div>
+</div>
+
+<div class="admin-card">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead>
+          <tr>
+            <th>Photo</th>
+            <th>Nom</th>
+            <th>Poste</th>
+            <th>Contact</th>
+            <th>Publié</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var m in Model)
+          {
+            <tr>
+              <td>
+                @if (!string.IsNullOrWhiteSpace(m.PhotoUrl))
+                {
+                  <img src="@m.PhotoUrl" alt="@m.Nom @m.Prenom" class="img-thumbnail rounded-circle" style="width: 60px; height: 60px; object-fit: cover;" />
+                }
+                else
+                {
+                  <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                    <i class="bi bi-person text-white" style="font-size: 1.5rem;"></i>
+                  </div>
+                }
+              </td>
+              <td><strong>@m.Prenom @m.Nom</strong></td>
+              <td>@m.Poste</td>
+              <td>
+                @if (!string.IsNullOrWhiteSpace(m.Email))
+                {
+                  <div><small><i class="bi bi-envelope"></i> @m.Email</small></div>
+                }
+                @if (!string.IsNullOrWhiteSpace(m.Telephone))
+                {
+                  <div><small><i class="bi bi-telephone"></i> @m.Telephone</small></div>
+                }
+              </td>
+              <td>
+                @if (m.EstPublie)
+                {
+                  <span class="badge bg-success">Oui</span>
+                }
+                else
+                {
+                  <span class="badge bg-secondary">Non</span>
+                }
+              </td>
+              <td class="text-end">
+                <a class="btn btn-sm btn-outline-primary" href="/Admin/Equipe/Edit/@m.Id">
+                  <i class="bi bi-pencil me-1"></i>Modifier
+                </a>
+                <form method="post" action="/Admin/Equipe/Delete/@m.Id" class="d-inline">
+                  @Html.AntiForgeryToken()
+                  <button class="btn btn-sm btn-outline-danger" type="submit" onclick="return confirm('Supprimer ce membre ?');">
+                    <i class="bi bi-trash me-1"></i>Supprimer
+                  </button>
+                </form>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+      @if (!Model.Any())
+      {
+        <div class="text-center py-5">
+          <i class="bi bi-inbox" style="font-size: 3rem; color: #dee2e6;"></i>
+          <p class="text-muted mt-3">Aucun membre d'équipe pour le moment.</p>
+          <a href="/Admin/Equipe/Create" class="btn btn-primary mt-2">
+            <i class="bi bi-plus-circle me-2"></i>Ajouter le premier membre
+          </a>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+

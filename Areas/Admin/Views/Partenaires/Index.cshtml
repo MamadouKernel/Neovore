@@ -1,0 +1,95 @@
+@model IEnumerable<Neovore.Web.Domain.Entities.Partenaire>
+@{
+    ViewData["Title"] = "Partenaires";
+}
+<div class="page-header">
+  <div class="d-flex justify-content-between align-items-center">
+    <div>
+      <h1 class="page-title">Partenaires / Clients</h1>
+      <p class="page-subtitle">Gérer vos partenaires et clients</p>
+    </div>
+    <a class="btn btn-primary" href="/Admin/Partenaires/Create">
+      <i class="bi bi-plus-circle me-2"></i>Nouveau partenaire
+    </a>
+  </div>
+</div>
+
+<div class="admin-card">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead>
+          <tr>
+            <th>Logo</th>
+            <th>Nom</th>
+            <th>Type</th>
+            <th>Site web</th>
+            <th>Publié</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var p in Model)
+          {
+            <tr>
+              <td>
+                @if (!string.IsNullOrWhiteSpace(p.LogoUrl))
+                {
+                  <img src="@p.LogoUrl" alt="@p.Nom" class="img-thumbnail" style="width: 60px; height: 60px; object-fit: contain;" />
+                }
+                else
+                {
+                  <span class="text-muted">-</span>
+                }
+              </td>
+              <td><strong>@p.Nom</strong></td>
+              <td><span class="badge bg-secondary">@p.TypePartenaire</span></td>
+              <td>
+                @if (!string.IsNullOrWhiteSpace(p.SiteWeb))
+                {
+                  <a href="@p.SiteWeb" target="_blank" rel="noopener"><i class="bi bi-link-45deg"></i></a>
+                }
+                else
+                {
+                  <span class="text-muted">-</span>
+                }
+              </td>
+              <td>
+                @if (p.EstPublie)
+                {
+                  <span class="badge bg-success">Oui</span>
+                }
+                else
+                {
+                  <span class="badge bg-secondary">Non</span>
+                }
+              </td>
+              <td class="text-end">
+                <a class="btn btn-sm btn-outline-primary" href="/Admin/Partenaires/Edit/@p.Id">
+                  <i class="bi bi-pencil me-1"></i>Modifier
+                </a>
+                <form method="post" action="/Admin/Partenaires/Delete/@p.Id" class="d-inline">
+                  @Html.AntiForgeryToken()
+                  <button class="btn btn-sm btn-outline-danger" type="submit" onclick="return confirm('Supprimer ce partenaire ?');">
+                    <i class="bi bi-trash me-1"></i>Supprimer
+                  </button>
+                </form>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+      @if (!Model.Any())
+      {
+        <div class="text-center py-5">
+          <i class="bi bi-inbox" style="font-size: 3rem; color: #dee2e6;"></i>
+          <p class="text-muted mt-3">Aucun partenaire pour le moment.</p>
+          <a href="/Admin/Partenaires/Create" class="btn btn-primary mt-2">
+            <i class="bi bi-plus-circle me-2"></i>Créer le premier partenaire
+          </a>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+

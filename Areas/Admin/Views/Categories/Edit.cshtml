@@ -1,0 +1,57 @@
+@model Neovore.Web.Domain.Entities.CategorieProduit
+@{
+    ViewData["Title"] = "Modifier la catégorie";
+}
+<div class="page-header">
+  <h1 class="page-title">Modifier la catégorie</h1>
+  <p class="page-subtitle">@Model.Nom</p>
+</div>
+
+<div class="admin-card">
+  <div class="card-body p-4">
+    <form method="post">
+      @Html.AntiForgeryToken()
+
+      <div class="row g-4">
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Nom *</label>
+          <input asp-for="Nom" class="form-control" required />
+          <span asp-validation-for="Nom" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Slug (auto si vide)</label>
+          <input asp-for="Slug" class="form-control" />
+          <small class="text-muted">Laissez vide pour régénérer</small>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Ordre</label>
+          <input asp-for="Ordre" type="number" class="form-control" />
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Active</label>
+          <select asp-for="EstActive" class="form-select">
+            <option value="true">Oui</option>
+            <option value="false">Non</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="mt-4 d-flex gap-2">
+        <button class="btn btn-primary" type="submit">
+          <i class="bi bi-check-circle me-2"></i>Enregistrer
+        </button>
+        <a class="btn btn-outline-secondary" href="/Admin/Categories">
+          <i class="bi bi-x-circle me-2"></i>Annuler
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+
+@section Scripts {
+  <partial name="_ValidationScriptsPartial" />
+}
+

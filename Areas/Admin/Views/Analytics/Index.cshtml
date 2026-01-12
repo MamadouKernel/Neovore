@@ -1,0 +1,164 @@
+@model Neovore.Web.Application.Services.AnalyticsStatsVm
+@{
+    ViewData["Title"] = "Statistiques";
+}
+
+<div class="page-header">
+    <h1 class="page-title">
+        <i class="bi bi-graph-up me-2" style="color: #FF6B35;"></i>Statistiques du site
+    </h1>
+    <p class="page-subtitle">Visites et recherches</p>
+</div>
+
+<form method="get" class="mb-4">
+    <div class="row g-3">
+        <div class="col-md-4">
+            <label class="form-label fw-bold">Date de début</label>
+            <input type="date" name="dateDebut" class="form-control" value="@ViewBag.DateDebut?.ToString("yyyy-MM-dd")" />
+        </div>
+        <div class="col-md-4">
+            <label class="form-label fw-bold">Date de fin</label>
+            <input type="date" name="dateFin" class="form-control" value="@ViewBag.DateFin?.ToString("yyyy-MM-dd")" />
+        </div>
+        <div class="col-md-4 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-filter me-2"></i>Filtrer
+            </button>
+            <a href="/Admin/Analytics" class="btn btn-outline-secondary ms-2">
+                <i class="bi bi-x-circle me-2"></i>Réinitialiser
+            </a>
+        </div>
+    </div>
+</form>
+
+<div class="row g-4 mb-5">
+    <div class="col-md-4">
+        <div class="admin-card">
+            <div class="card-body text-center p-4">
+                <div class="mb-3">
+                    <i class="bi bi-eye-fill" style="font-size: 3rem; color: #FF6B35;"></i>
+                </div>
+                <h2 class="display-4 fw-bold mb-2" style="color: #FF6B35;">@Model.TotalVisites</h2>
+                <p class="text-muted mb-0">Total des visites</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="admin-card">
+            <div class="card-body text-center p-4">
+                <div class="mb-3">
+                    <i class="bi bi-person-check-fill" style="font-size: 3rem; color: #1E88E5;"></i>
+                </div>
+                <h2 class="display-4 fw-bold mb-2" style="color: #1E88E5;">@Model.VisitesUniques</h2>
+                <p class="text-muted mb-0">Visiteurs uniques</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="admin-card">
+            <div class="card-body text-center p-4">
+                <div class="mb-3">
+                    <i class="bi bi-search" style="font-size: 3rem; color: #E63946;"></i>
+                </div>
+                <h2 class="display-4 fw-bold mb-2" style="color: #E63946;">@Model.TotalRecherches</h2>
+                <p class="text-muted mb-0">Recherches effectuées</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="admin-card">
+            <div class="card-header bg-white border-bottom p-3">
+                <h3 class="h5 fw-bold mb-0">
+                    <i class="bi bi-list-ol me-2" style="color: #FF6B35;"></i>Pages les plus visitées
+                </h3>
+            </div>
+            <div class="card-body p-0">
+                @if (Model.PagesPopulaires.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>URL</th>
+                                    <th class="text-end">Visites</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var page in Model.PagesPopulaires)
+                                {
+                                    <tr>
+                                        <td>
+                                            <code class="small">@(page.Url)</code>
+                                        </td>
+                                        <td class="text-end">
+                                            <span class="badge bg-primary">@(page.Count)</span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="p-4 text-center text-muted">
+                        <i class="bi bi-inbox" style="font-size: 2rem;"></i>
+                        <p class="mt-2 mb-0">Aucune donnée disponible</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-6">
+        <div class="admin-card">
+            <div class="card-header bg-white border-bottom p-3">
+                <h3 class="h5 fw-bold mb-0">
+                    <i class="bi bi-search me-2" style="color: #1E88E5;"></i>Recherches les plus populaires
+                </h3>
+            </div>
+            <div class="card-body p-0">
+                @if (Model.RecherchesPopulaires.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Terme recherché</th>
+                                    <th class="text-end">Nombre</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var recherche in Model.RecherchesPopulaires)
+                                {
+                                    <tr>
+                                        <td>
+                                            <strong>@recherche.Terme</strong>
+                                        </td>
+                                        <td class="text-end">
+                                            <span class="badge bg-info">@recherche.Count</span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="p-4 text-center text-muted">
+                        <i class="bi bi-inbox" style="font-size: 2rem;"></i>
+                        <p class="mt-2 mb-0">Aucune recherche effectuée</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+

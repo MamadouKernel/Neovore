@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  # Base de données PostgreSQL
+  postgres:
+    image: postgres:16-alpine
+    container_name: neovore_postgres
+    environment:
+      POSTGRES_DB: neovore_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-root}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - neovore_network
+
+  # Application ASP.NET Core
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: neovore_web
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=neovore_db;Username=postgres;Password=${POSTGRES_PASSWORD:-root}
+    volumes:
+      # Volume pour les uploads (images, vidéos, logos)
+      - uploads_data:/app/wwwroot/uploads
+      # Volume pour les images statiques (optionnel)
+      - ./wwwroot/images:/app/wwwroot/images:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - neovore_network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+  uploads_data:
+    driver: local
+
+networks:
+  neovore_network:
+    driver: bridge
+

@@ -1,0 +1,186 @@
+@model Neovore.Web.Domain.Entities.SiteSettings
+@{
+    ViewData["Title"] = "Paramètres du site";
+}
+<div class="page-header">
+  <h1 class="page-title">Paramètres du site</h1>
+  <p class="page-subtitle">Configurer les informations générales du site</p>
+</div>
+
+@if (ViewBag.Message != null)
+{
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <i class="bi bi-check-circle me-2"></i>@ViewBag.Message
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+}
+
+<div class="admin-card">
+  <div class="card-body p-4">
+    <form method="post" enctype="multipart/form-data">
+      @Html.AntiForgeryToken()
+
+      <div class="row g-4">
+        <div class="col-12">
+          <h3 class="h5 fw-bold mb-3">
+            <i class="bi bi-building me-2" style="color: #FF6B35;"></i>Informations de l'entreprise
+          </h3>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Nom de l'entreprise *</label>
+          <input asp-for="NomEntreprise" class="form-control" placeholder="NÉOVORE" required />
+          <span asp-validation-for="NomEntreprise" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">
+            <i class="bi bi-image me-2"></i>Logo du site
+          </label>
+          <input type="file" name="logoFile" accept="image/*" class="form-control" />
+          <small class="text-muted">Formats acceptés : JPG, PNG, GIF, WebP. Laisser vide pour conserver le logo actuel.</small>
+          @if (!string.IsNullOrEmpty(Model.LogoUrl))
+          {
+            <div class="mt-2">
+              <p class="small mb-1">Logo actuel :</p>
+              <img src="@Model.LogoUrl" alt="Logo actuel" style="max-height: 80px; max-width: 200px; border: 1px solid #ddd; border-radius: 4px; padding: 4px;" />
+            </div>
+          }
+          <span asp-validation-for="LogoUrl" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Email de contact</label>
+          <input asp-for="EmailContact" type="email" class="form-control" placeholder="contact@example.com" />
+          <span asp-validation-for="EmailContact" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Téléphone</label>
+          <input asp-for="TelephoneContact" class="form-control" placeholder="+33 X XX XX XX XX" />
+          <span asp-validation-for="TelephoneContact" class="text-danger small"></span>
+        </div>
+
+        <div class="col-12">
+          <label class="form-label fw-bold">Adresse</label>
+          <input asp-for="Adresse" class="form-control" placeholder="Adresse complète" />
+          <span asp-validation-for="Adresse" class="text-danger small"></span>
+        </div>
+
+        <div class="col-12 mt-4">
+          <h3 class="h5 fw-bold mb-3">
+            <i class="bi bi-bar-chart me-2" style="color: #FF6B35;"></i>Statistiques page d'accueil
+          </h3>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label fw-bold">Années d'expérience</label>
+          <input asp-for="AnneesExperience" class="form-control" placeholder="+10" />
+          <small class="text-muted">Ex: +10, 15+, etc.</small>
+          <span asp-validation-for="AnneesExperience" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label fw-bold">Projets réalisés</label>
+          <input asp-for="ProjetsRealises" class="form-control" placeholder="500+" />
+          <small class="text-muted">Ex: 500+, 1000, etc.</small>
+          <span asp-validation-for="ProjetsRealises" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label fw-bold">Satisfaction client</label>
+          <input asp-for="SatisfactionClient" class="form-control" placeholder="100%" />
+          <small class="text-muted">Ex: 100%, 98%, etc.</small>
+          <span asp-validation-for="SatisfactionClient" class="text-danger small"></span>
+        </div>
+
+        <div class="col-12 mt-4">
+          <h3 class="h5 fw-bold mb-3">
+            <i class="bi bi-share me-2" style="color: #FF6B35;"></i>Réseaux sociaux <small class="text-muted fw-normal">(optionnel - remplir uniquement ceux que vous souhaitez afficher)</small>
+          </h3>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">
+            <i class="bi bi-facebook me-2"></i>Facebook
+          </label>
+          <input asp-for="FacebookUrl" type="text" class="form-control" placeholder="https://facebook.com/..." />
+          <span asp-validation-for="FacebookUrl" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">
+            <i class="bi bi-linkedin me-2"></i>LinkedIn
+          </label>
+          <input asp-for="LinkedInUrl" type="text" class="form-control" placeholder="https://linkedin.com/..." />
+          <span asp-validation-for="LinkedInUrl" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">
+            <i class="bi bi-twitter-x me-2"></i>Twitter / X
+          </label>
+          <input asp-for="TwitterUrl" type="text" class="form-control" placeholder="https://twitter.com/... ou https://x.com/..." />
+          <span asp-validation-for="TwitterUrl" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">
+            <i class="bi bi-instagram me-2"></i>Instagram
+          </label>
+          <input asp-for="InstagramUrl" type="text" class="form-control" placeholder="https://instagram.com/..." />
+          <span asp-validation-for="InstagramUrl" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">
+            <i class="bi bi-youtube me-2"></i>YouTube
+          </label>
+          <input asp-for="YouTubeUrl" type="text" class="form-control" placeholder="https://youtube.com/..." />
+          <span asp-validation-for="YouTubeUrl" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">
+            <i class="bi bi-tiktok me-2"></i>TikTok
+          </label>
+          <input asp-for="TikTokUrl" type="text" class="form-control" placeholder="https://tiktok.com/..." />
+          <span asp-validation-for="TikTokUrl" class="text-danger small"></span>
+        </div>
+
+        <div class="col-12 mt-4">
+          <h3 class="h5 fw-bold mb-3">
+            <i class="bi bi-search me-2" style="color: #FF6B35;"></i>SEO (Référencement)
+          </h3>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Titre SEO par défaut</label>
+          <input asp-for="SeoTitleDefaut" class="form-control" placeholder="Titre par défaut pour les pages" />
+          <small class="text-muted">Utilisé si non spécifié sur une page</small>
+          <span asp-validation-for="SeoTitleDefaut" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Description SEO par défaut</label>
+          <textarea asp-for="SeoDescriptionDefaut" class="form-control" rows="2" placeholder="Description par défaut pour les pages"></textarea>
+          <small class="text-muted">Utilisée si non spécifiée sur une page</small>
+          <span asp-validation-for="SeoDescriptionDefaut" class="text-danger small"></span>
+        </div>
+      </div>
+
+      <div class="mt-4 d-flex gap-2">
+        <button class="btn btn-primary" type="submit">
+          <i class="bi bi-check-circle me-2"></i>Sauvegarder les paramètres
+        </button>
+        <a class="btn btn-outline-secondary" href="/Admin/Dashboard">
+          <i class="bi bi-arrow-left me-2"></i>Retour au dashboard
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+
+@section Scripts {
+  <partial name="_ValidationScriptsPartial" />
+}

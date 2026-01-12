@@ -1,0 +1,90 @@
+@model IEnumerable<Neovore.Web.Domain.Entities.Produit>
+@{
+    ViewData["Title"] = "Nos produits - NÉOVORE";
+    var cats = ViewBag.Categories as IEnumerable<Neovore.Web.Domain.Entities.CategorieProduit>;
+    var categorieId = Context.Request.Query["categorieId"].ToString();
+}
+<div class="container py-4 py-lg-5">
+  <div class="row mb-5 mb-lg-6">
+    <div class="col-lg-8 mx-auto text-center">
+      <h1 class="display-4 fw-bold mb-3">
+        <i class="bi bi-box-seam-fill me-3" style="background: linear-gradient(135deg, #FF6B35 0%, #E63946 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>Nos produits
+      </h1>
+      <p class="lead text-muted">
+        Explorez notre catalogue de produits de qualité pour tous vos besoins professionnels.
+      </p>
+    </div>
+  </div>
+
+  <!-- Filtres par catégorie -->
+  @if (cats != null && cats.Any())
+  {
+    <div class="mb-5 mb-lg-6">
+      <div class="d-flex flex-wrap gap-2 justify-content-center">
+        <a class="btn @(string.IsNullOrEmpty(categorieId) ? "btn-primary" : "btn-outline-primary")" 
+           href="/Produits" 
+           style="border-radius: 50px;">
+          <i class="bi bi-grid me-2"></i>Tous les produits
+        </a>
+        @foreach (var c in cats)
+        {
+          <a class="btn @(categorieId == c.Id.ToString() ? "btn-primary" : "btn-outline-primary")" 
+             href="/Produits?categorieId=@c.Id" 
+             style="border-radius: 50px;">
+            @c.Nom
+          </a>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Liste des produits -->
+  <div class="row g-4 g-lg-5">
+    @foreach (var p in Model)
+    {
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm overflow-hidden">
+          @if (p.Medias?.Any() == true)
+          {
+            <div style="height: 200px; overflow: hidden; background: linear-gradient(135deg, #FF6B35 0%, #E63946 100%);">
+              <img src="@p.Medias.OrderBy(x => x.Ordre).First().Url" 
+                   alt="@p.Medias.OrderBy(x => x.Ordre).First().Alt" 
+                   class="img-fluid w-100 h-100" 
+                   style="object-fit: cover; opacity: 0.9;">
+            </div>
+          }
+          else
+          {
+            <div style="height: 200px; background: linear-gradient(135deg, #FF6B35 0%, #E63946 100%); display: flex; align-items: center; justify-content: center;">
+              <i class="bi bi-box-seam text-white" style="font-size: 4rem; opacity: 0.5;"></i>
+            </div>
+          }
+          <div class="card-body p-4 p-lg-5">
+            @if (p.Categorie != null)
+            {
+              <span class="badge bg-primary mb-2" style="border-radius: 6px;">@p.Categorie.Nom</span>
+            }
+            <h2 class="h5 fw-bold mb-3">@p.Nom</h2>
+            <p class="text-muted mb-4" style="min-height: 60px;">
+              @(p.Description?.Length > 100 ? p.Description.Substring(0, 100) + "..." : p.Description)
+            </p>
+            <a class="btn btn-primary w-100" href="/produits/@p.Slug" style="border-radius: 8px;">
+              Voir la fiche <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+  @if (!Model.Any())
+  {
+    <div class="text-center py-5">
+      <i class="bi bi-inbox" style="font-size: 4rem; color: #dee2e6;"></i>
+      <p class="text-muted mt-3">Aucun produit disponible dans cette catégorie.</p>
+      <a href="/Produits" class="btn btn-primary mt-3" style="border-radius: 8px;">
+        Voir tous les produits
+      </a>
+    </div>
+  }
+</div>

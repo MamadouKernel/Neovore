@@ -1,0 +1,79 @@
+@model Neovore.Web.Domain.Entities.ServiceOffert
+@{
+    ViewData["Title"] = Model.Titre + " - NÉOVORE";
+}
+<div class="container py-4 py-lg-5">
+  <nav aria-label="breadcrumb" class="mb-4 mb-lg-5">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/" class="text-decoration-none">Accueil</a></li>
+      <li class="breadcrumb-item"><a href="/Services" class="text-decoration-none">Services</a></li>
+      <li class="breadcrumb-item active" aria-current="page">@Model.Titre</li>
+    </ol>
+  </nav>
+
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      <a class="btn btn-outline-secondary mb-4" href="/Services" style="border-radius: 8px;">
+        <i class="bi bi-arrow-left me-2"></i>Retour aux services
+      </a>
+
+      <article class="card border-0 shadow-sm mb-4 mb-lg-5">
+        @if (!string.IsNullOrWhiteSpace(Model.ImageUrl))
+        {
+          <div style="height: 400px; overflow: hidden; background: linear-gradient(135deg, #FF6B35 0%, #E63946 100%);">
+            <img src="@Model.ImageUrl" 
+                 alt="@Model.Titre" 
+                 class="img-fluid w-100 h-100" 
+                 style="object-fit: cover; border-radius: 16px 16px 0 0;">
+          </div>
+        }
+        <div class="card-body p-5 p-lg-6">
+          @if (string.IsNullOrWhiteSpace(Model.ImageUrl))
+          {
+            <div class="mb-4" style="width: 80px; height: 80px; background: linear-gradient(135deg, #FF6B35 0%, #E63946 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center;">
+              <i class="bi bi-gear-fill text-white" style="font-size: 2rem;"></i>
+            </div>
+          }
+          
+          <h1 class="display-5 fw-bold mb-3">@Model.Titre</h1>
+          
+          @if (!string.IsNullOrWhiteSpace(Model.Resume))
+          {
+            <p class="lead text-muted mb-4">@Model.Resume</p>
+          }
+
+          <hr class="my-4">
+
+          <div class="content" style="font-size: 1.1rem; line-height: 1.8;">
+            @Html.Raw(Model.ContenuHtml)
+          </div>
+        </div>
+      </article>
+
+      @{
+        var commentairesVm = ViewData["CommentairesPartial"] as Neovore.Web.ViewModels.CommentairePartialVm;
+      }
+      @if (commentairesVm != null)
+      {
+        <partial name="_CommentairesPartial" model="commentairesVm" />
+      }
+
+      <div class="card border-0 shadow-sm mt-4" style="background: linear-gradient(135deg, #1E88E5 0%, #1565C0 100%); border-radius: 16px;">
+        <div class="card-body p-4 text-white text-center">
+          <h3 class="h5 fw-bold mb-3">
+            <i class="bi bi-question-circle me-2"></i>Intéressé par ce service ?
+          </h3>
+          <p class="mb-4">Contactez-nous pour discuter de vos besoins et obtenir un devis personnalisé.</p>
+          <div class="d-flex flex-wrap gap-3 justify-content-center">
+            <a class="btn btn-light" href="/devis" style="border-radius: 50px;">
+              <i class="bi bi-file-earmark-text me-2"></i>Demander un devis
+            </a>
+            <a class="btn btn-outline-light" href="/contact" style="border-radius: 50px; border-width: 2px;">
+              <i class="bi bi-envelope me-2"></i>Nous contacter
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

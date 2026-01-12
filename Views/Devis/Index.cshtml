@@ -1,0 +1,99 @@
+@model Neovore.Web.ViewModels.DemandeDevisVm
+@{
+    ViewData["Title"] = "Demander un devis - NÉOVORE";
+}
+<div class="container py-4 py-lg-5">
+  <div class="row mb-5 mb-lg-6">
+    <div class="col-lg-8 mx-auto text-center">
+      <h1 class="display-4 fw-bold mb-3">
+        <i class="bi bi-file-earmark-text-fill me-3" style="background: linear-gradient(135deg, #FF6B35 0%, #E63946 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>Demander un devis
+      </h1>
+      <p class="lead text-muted">
+        Remplissez ce formulaire et notre équipe vous enverra un devis personnalisé adapté à vos besoins.
+      </p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-9 mx-auto">
+      <div class="card border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
+        <div class="card-body p-5 p-lg-6">
+          <form method="post">
+            @Html.AntiForgeryToken()
+            <input type="text" name="Website" value="" class="d-none" autocomplete="off" />
+
+            <div class="row g-4">
+              <div class="col-md-6">
+                <label asp-for="Nom" class="form-label fw-bold">
+                  <i class="bi bi-person me-2" style="color: #FF6B35;" aria-hidden="true"></i>Nom complet <span class="text-danger" aria-label="champ obligatoire">*</span>
+                </label>
+                <input asp-for="Nom" class="form-control form-control-lg" placeholder="Votre nom" aria-describedby="Nom-error Nom-help" aria-required="true"/>
+                <span asp-validation-for="Nom" class="text-danger small" id="Nom-error"></span>
+              </div>
+              <div class="col-md-6">
+                <label asp-for="Societe" class="form-label fw-bold">
+                  <i class="bi bi-building me-2" style="color: #FF6B35;" aria-hidden="true"></i>Société <span class="text-danger" aria-label="champ obligatoire">*</span>
+                </label>
+                <input asp-for="Societe" class="form-control form-control-lg" placeholder="Nom de votre entreprise" aria-describedby="Societe-error Societe-help" aria-required="true"/>
+                <span asp-validation-for="Societe" class="text-danger small" id="Societe-error"></span>
+              </div>
+              <div class="col-md-6">
+                <label asp-for="Telephone" class="form-label fw-bold">
+                  <i class="bi bi-telephone me-2" style="color: #FF6B35;" aria-hidden="true"></i>Téléphone <span class="text-danger" aria-label="champ obligatoire">*</span>
+                </label>
+                <input asp-for="Telephone" class="form-control form-control-lg" placeholder="06 12 34 56 78" aria-describedby="Telephone-error Telephone-help" aria-required="true"/>
+                <span asp-validation-for="Telephone" class="text-danger small" id="Telephone-error"></span>
+              </div>
+              <div class="col-md-6">
+                <label asp-for="Email" class="form-label fw-bold">
+                  <i class="bi bi-envelope me-2" style="color: #FF6B35;" aria-hidden="true"></i>Email <span class="text-danger" aria-label="champ obligatoire">*</span>
+                </label>
+                <input asp-for="Email" type="email" class="form-control form-control-lg" placeholder="votre@email.com" aria-describedby="Email-error Email-help" aria-required="true"/>
+                <span asp-validation-for="Email" class="text-danger small" id="Email-error"></span>
+              </div>
+              <div class="col-md-6">
+                <label asp-for="Secteur" class="form-label fw-bold">
+                  <i class="bi bi-building me-2" style="color: #FF6B35;" aria-hidden="true"></i>Secteur d'activité <span class="text-danger" aria-label="champ obligatoire">*</span>
+                </label>
+                <input asp-for="Secteur" class="form-control form-control-lg" placeholder="Hôtel, Boulangerie, Clinique..." aria-describedby="Secteur-error Secteur-help" aria-required="true"/>
+                <span asp-validation-for="Secteur" class="text-danger small" id="Secteur-error"></span>
+                <small class="text-muted" id="Secteur-help">Ex: Hôtel, Boulangerie, Clinique, Restaurant...</small>
+              </div>
+              <div class="col-md-6">
+                <label asp-for="TypeBesoin" class="form-label fw-bold">
+                  <i class="bi bi-tools me-2" style="color: #FF6B35;" aria-hidden="true"></i>Type de besoin <span class="text-danger" aria-label="champ obligatoire">*</span>
+                </label>
+                <input asp-for="TypeBesoin" class="form-control form-control-lg" placeholder="Froid, Électricité, Groupe..." aria-describedby="TypeBesoin-error TypeBesoin-help" aria-required="true"/>
+                <span asp-validation-for="TypeBesoin" class="text-danger small" id="TypeBesoin-error"></span>
+                <small class="text-muted" id="TypeBesoin-help">Ex: Froid industriel, Installation électrique, Groupe électrogène...</small>
+              </div>
+              <div class="col-12">
+                <label asp-for="Message" class="form-label fw-bold">
+                  <i class="bi bi-chat-dots me-2" style="color: #FF6B35;" aria-hidden="true"></i>Détails de votre projet <span class="text-danger" aria-label="champ obligatoire">*</span>
+                </label>
+                <textarea asp-for="Message" class="form-control" rows="6" placeholder="Décrivez votre projet, vos besoins, vos contraintes..." aria-describedby="Message-error Message-help" aria-required="true"></textarea>
+                <span asp-validation-for="Message" class="text-danger small" id="Message-error"></span>
+                <small class="text-muted" id="Message-help">Plus de détails nous aideront à vous proposer la meilleure solution.</small>
+              </div>
+            </div>
+
+            <div class="alert alert-info mt-4 mb-0" style="border-radius: 12px; border: none; background: #e7f3ff;">
+              <i class="bi bi-info-circle me-2"></i>
+              <strong>À savoir :</strong> Nous étudions chaque demande avec attention et vous répondons sous 24-48h avec un devis détaillé.
+            </div>
+
+            <div class="d-grid mt-4">
+              <button class="btn btn-primary btn-lg" type="submit" style="border-radius: 12px; padding: 1rem;">
+                <i class="bi bi-send me-2" aria-hidden="true"></i>Envoyer la demande de devis
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+@section Scripts{
+  <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,223 @@
+@using Neovore.Web.Application.Services
+@model Neovore.Web.ViewModels.CommentairePartialVm
+@{
+    var commentairesActives = Model.CommentairesActives;
+    var commentaires = Model.Commentaires ?? new List<Neovore.Web.Domain.Entities.Commentaire>();
+    var moyenneNote = commentaires.Any(c => c.Note.HasValue) 
+        ? commentaires.Where(c => c.Note.HasValue).Average(c => c.Note!.Value) 
+        : (double?)null;
+}
+
+@if (commentairesActives)
+{
+  <div class="card border-0 shadow-sm mt-5" style="border-radius: 16px; overflow: hidden;">
+    <div class="card-body p-4 p-lg-5">
+      <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+        <div>
+          <h3 class="h4 fw-bold mb-2">
+            <i class="bi bi-chat-dots-fill me-2" style="color: #FF6B35;"></i>Avis clients
+          </h3>
+          @if (commentaires.Any() && moyenneNote.HasValue)
+          {
+            <div class="d-flex align-items-center gap-2">
+              <div class="d-flex align-items-center">
+                @for (int i = 1; i <= 5; i++)
+                {
+                  <i class="bi @(i <= Math.Round(moyenneNote.Value) ? "bi-star-fill" : "bi-star") text-warning" style="font-size: 1.2rem;"></i>
+                }
+              </div>
+              <span class="fw-bold text-dark" style="font-size: 1.1rem;">@moyenneNote.Value.ToString("F1")</span>
+              <span class="text-muted">(@commentaires.Count @(commentaires.Count > 1 ? "avis" : "avis"))</span>
+            </div>
+          }
+          else
+          {
+            <p class="text-muted mb-0">@commentaires.Count @(commentaires.Count > 1 ? "avis" : "avis")</p>
+          }
+        </div>
+      </div>
+
+      @if (TempData["CommentaireEnAttente"] != null)
+      {
+        <div class="alert alert-info alert-dismissible fade show mb-4" role="alert" style="border-radius: 12px; border: none;">
+          <i class="bi bi-info-circle-fill me-2"></i>@TempData["CommentaireEnAttente"]
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      }
+
+      @if (commentaires.Any())
+      {
+        <div class="mb-5">
+          @foreach (var c in commentaires)
+          {
+            <div class="border-bottom pb-4 mb-4" style="border-color: #e9ecef !important;">
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <div class="flex-grow-1">
+                  <div class="d-flex align-items-center gap-2 mb-2">
+                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 45px; height: 45px; font-size: 1rem;">
+                      @(c.Nom.Length > 0 ? c.Nom.Substring(0, 1).ToUpper() : "?")
+                    </div>
+                    <div>
+                      <strong class="d-block" style="font-size: 1.05rem;">@c.Nom</strong>
+                      @if (c.Note.HasValue)
+                      {
+                        <div class="d-flex align-items-center gap-1 mt-1">
+                          @for (int i = 1; i <= 5; i++)
+                          {
+                            <i class="bi @(i <= c.Note.Value ? "bi-star-fill" : "bi-star") text-warning" style="font-size: 0.95rem;"></i>
+                          }
+                          <span class="text-muted small ms-1">(@c.Note.Value/5)</span>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                </div>
+                <small class="text-muted" style="white-space: nowrap;">@c.CreatedAtUtc.ToLocalTime().ToString("dd MMM yyyy")</small>
+              </div>
+              <p class="mb-0" style="color: #495057; line-height: 1.7; font-size: 1rem;">@c.Message</p>
+            </div>
+          }
+        </div>
+      }
+      else
+      {
+        <div class="text-center py-4 mb-4">
+          <i class="bi bi-chat-left-text" style="font-size: 3rem; color: #dee2e6;"></i>
+          <p class="text-muted mt-3 mb-0">Aucun avis pour le moment. Soyez le premier à laisser votre avis !</p>
+        </div>
+      }
+
+      <div class="bg-light rounded-3 p-4 p-lg-5" style="border: 2px dashed #dee2e6;">
+        <h4 class="h5 fw-bold mb-4">
+          <i class="bi bi-pencil-square me-2" style="color: #FF6B35;"></i>Laisser un avis
+        </h4>
+        <form method="post" action="/Commentaires/Creer" id="commentaireForm">
+          @Html.AntiForgeryToken()
+          <input type="hidden" name="ServiceOffertId" value="@Model.ServiceOffertId" />
+          <input type="hidden" name="ProduitId" value="@Model.ProduitId" />
+          <input type="hidden" name="RealisationId" value="@Model.RealisationId" />
+          <input type="text" name="Website" value="" class="d-none" autocomplete="off" />
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label fw-bold">
+                <i class="bi bi-person me-1"></i>Nom complet *
+              </label>
+              <input name="Nom" class="form-control form-control-lg" placeholder="Votre nom" required style="border-radius: 10px;" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold">
+                <i class="bi bi-envelope me-1"></i>Email *
+              </label>
+              <input name="Email" type="email" class="form-control form-control-lg" placeholder="votre@email.com" required style="border-radius: 10px;" />
+            </div>
+            <div class="col-12">
+              <label class="form-label fw-bold d-block mb-3">
+                <i class="bi bi-star me-1"></i>Note (optionnelle)
+              </label>
+              <div class="star-rating-input d-flex align-items-center gap-2">
+                <input type="hidden" name="Note" id="noteValue" />
+                @for (int i = 5; i >= 1; i--)
+                {
+                  <i class="bi bi-star star-icon" data-rating="@i" style="font-size: 2rem; color: #dee2e6; cursor: pointer; transition: all 0.2s;"></i>
+                }
+                <span id="rating-text" class="text-muted ms-2 fw-bold" style="font-size: 1.1rem;"></span>
+              </div>
+              <small class="text-muted d-block mt-2">Cliquez sur les étoiles pour donner une note</small>
+            </div>
+            <div class="col-12">
+              <label class="form-label fw-bold">
+                <i class="bi bi-chat-left-text me-1"></i>Votre avis *
+              </label>
+              <textarea name="Message" class="form-control" rows="5" placeholder="Partagez votre expérience..." required maxlength="1000" style="border-radius: 10px; resize: vertical;"></textarea>
+              <div class="d-flex justify-content-between align-items-center mt-2">
+                <small class="text-muted">Maximum 1000 caractères</small>
+                <small class="text-muted"><span id="charCount">0</span>/1000</small>
+              </div>
+            </div>
+            <div class="col-12 mt-3">
+              <button type="submit" class="btn btn-primary btn-lg px-5" style="border-radius: 12px;">
+                <i class="bi bi-send-fill me-2"></i>Publier mon avis
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const stars = document.querySelectorAll('.star-icon');
+      const noteInput = document.getElementById('noteValue');
+      const ratingText = document.getElementById('rating-text');
+      const textarea = document.querySelector('textarea[name="Message"]');
+      const charCount = document.getElementById('charCount');
+
+      if (textarea && charCount) {
+        textarea.addEventListener('input', function() {
+          charCount.textContent = this.value.length;
+        });
+      }
+
+      stars.forEach(star => {
+        star.addEventListener('click', function() {
+          const rating = parseInt(this.getAttribute('data-rating'));
+          noteInput.value = rating;
+          updateStars(rating);
+          updateRatingText(rating);
+        });
+
+        star.addEventListener('mouseenter', function() {
+          const rating = parseInt(this.getAttribute('data-rating'));
+          highlightStars(rating);
+        });
+      });
+
+      document.querySelector('.star-rating-input').addEventListener('mouseleave', function() {
+        const currentRating = noteInput.value ? parseInt(noteInput.value) : 0;
+        updateStars(currentRating);
+      });
+
+      function updateStars(rating) {
+        stars.forEach((star, index) => {
+          const starRating = 5 - index;
+          if (starRating <= rating) {
+            star.classList.remove('bi-star');
+            star.classList.add('bi-star-fill');
+            star.style.color = '#ffc107';
+          } else {
+            star.classList.remove('bi-star-fill');
+            star.classList.add('bi-star');
+            star.style.color = '#dee2e6';
+          }
+        });
+      }
+
+      function highlightStars(rating) {
+        stars.forEach((star, index) => {
+          const starRating = 5 - index;
+          if (starRating <= rating) {
+            star.style.color = '#ffc107';
+            star.style.transform = 'scale(1.1)';
+          } else {
+            star.style.color = '#dee2e6';
+            star.style.transform = 'scale(1)';
+          }
+        });
+      }
+
+      function updateRatingText(rating) {
+        const texts = {
+          1: 'Très insatisfait',
+          2: 'Insatisfait',
+          3: 'Moyen',
+          4: 'Satisfait',
+          5: 'Très satisfait'
+        };
+        ratingText.textContent = texts[rating] || '';
+        ratingText.style.color = '#FF6B35';
+      }
+    })();
+  </script>
+}

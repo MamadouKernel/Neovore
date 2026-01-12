@@ -1,0 +1,31 @@
+@model Neovore.Web.Domain.Entities.Media
+@*
+    Partial view pour afficher une vidéo de manière accessible
+    Usage: @await Html.PartialAsync("_VideoAccessible", media)
+*@
+@if (Model.Type == "video")
+{
+    <div class="video-container mb-4" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; background: #000;">
+        <video 
+            controls 
+            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+            aria-label="@(Model.DescriptionVideo ?? Model.Alt ?? "Vidéo")">
+            <source src="@Model.Url" type="video/mp4">
+            @if (!string.IsNullOrWhiteSpace(Model.SousTitresUrl))
+            {
+                <track kind="captions" src="@Model.SousTitresUrl" srclang="fr" label="Français" default>
+            }
+            <p>
+                Votre navigateur ne supporte pas la lecture de vidéos HTML5. 
+                <a href="@Model.Url">Télécharger la vidéo</a>
+            </p>
+        </video>
+    </div>
+    @if (!string.IsNullOrWhiteSpace(Model.DescriptionVideo))
+    {
+        <div class="visually-hidden">
+            Description de la vidéo : @Model.DescriptionVideo
+        </div>
+    }
+}
+

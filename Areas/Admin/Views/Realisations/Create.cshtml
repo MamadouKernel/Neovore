@@ -1,0 +1,77 @@
+@model Neovore.Web.Domain.Entities.Realisation
+@{
+    ViewData["Title"] = "Créer une réalisation";
+}
+<div class="page-header">
+  <h1 class="page-title">Créer une réalisation</h1>
+  <p class="page-subtitle">Ajouter une nouvelle réalisation au portfolio</p>
+</div>
+
+<div class="admin-card">
+  <div class="card-body p-4">
+    <form method="post" enctype="multipart/form-data">
+      @Html.AntiForgeryToken()
+
+      <div class="row g-4">
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Titre *</label>
+          <input asp-for="Titre" class="form-control" placeholder="Titre de la réalisation" required />
+          <span asp-validation-for="Titre" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Slug (auto si vide)</label>
+          <input asp-for="Slug" class="form-control" placeholder="slug-automatique" />
+          <small class="text-muted">Laissez vide pour générer automatiquement</small>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Secteur *</label>
+          <input asp-for="Secteur" class="form-control" placeholder="Ex: Hôtel, Restaurant, Clinique..." required />
+          <span asp-validation-for="Secteur" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Publié</label>
+          <select asp-for="EstPublie" class="form-select">
+            <option value="true">Oui</option>
+            <option value="false">Non</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Commentaires activés</label>
+          <select asp-for="CommentairesActives" class="form-select">
+            <option value="true">Oui</option>
+            <option value="false">Non</option>
+          </select>
+        </div>
+
+        <div class="col-12">
+          <label class="form-label fw-bold">Description</label>
+          <textarea asp-for="Description" class="form-control" rows="5" placeholder="Description de la réalisation"></textarea>
+          <span asp-validation-for="Description" class="text-danger small"></span>
+        </div>
+
+        <div class="col-12">
+          <label class="form-label fw-bold">Images</label>
+          <input type="file" name="imageFiles" accept="image/*" multiple class="form-control" />
+          <small class="text-muted">Vous pouvez sélectionner plusieurs images. Formats acceptés : JPG, PNG, GIF</small>
+        </div>
+      </div>
+
+      <div class="mt-4 d-flex gap-2">
+        <button class="btn btn-primary" type="submit">
+          <i class="bi bi-check-circle me-2"></i>Enregistrer
+        </button>
+        <a class="btn btn-outline-secondary" href="/Admin/Realisations">
+          <i class="bi bi-x-circle me-2"></i>Annuler
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+
+@section Scripts {
+  <partial name="_ValidationScriptsPartial" />
+}
+

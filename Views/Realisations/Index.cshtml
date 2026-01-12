@@ -1,0 +1,74 @@
+@model IEnumerable<Neovore.Web.Domain.Entities.Realisation>
+@{
+    ViewData["Title"] = "Nos réalisations - NÉOVORE";
+}
+<div class="container py-4 py-lg-5">
+  <div class="row mb-5 mb-lg-6">
+    <div class="col-lg-8 mx-auto text-center">
+      <h1 class="display-4 fw-bold mb-3">
+        <i class="bi bi-trophy-fill me-3" style="background: linear-gradient(135deg, #1E88E5 0%, #1565C0 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>Nos réalisations
+      </h1>
+      <p class="lead text-muted">
+        Découvrez nos projets récents et la qualité de nos réalisations pour nos clients.
+      </p>
+    </div>
+  </div>
+
+  <div class="row g-4 g-lg-5">
+    @foreach (var r in Model)
+    {
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm overflow-hidden">
+          @if (r.Medias?.Any() == true)
+          {
+            <div style="height: 250px; overflow: hidden;">
+              <img src="@r.Medias.OrderBy(x => x.Ordre).First().Url" 
+                   alt="@r.Medias.OrderBy(x => x.Ordre).First().Alt" 
+                   class="img-fluid w-100 h-100" 
+                   style="object-fit: cover; transition: transform 0.3s ease;">
+            </div>
+          }
+          else
+          {
+            <div style="height: 250px; background: linear-gradient(135deg, #E63946 0%, #F77F00 100%); display: flex; align-items: center; justify-content: center;">
+              <i class="bi bi-image text-white" style="font-size: 4rem; opacity: 0.5;"></i>
+            </div>
+          }
+          <div class="card-body p-4 p-lg-5">
+            <span class="badge bg-primary mb-2" style="border-radius: 6px;">
+              <i class="bi bi-building me-1"></i>@r.Secteur
+            </span>
+            <h2 class="h5 fw-bold mb-3">@r.Titre</h2>
+            @if (!string.IsNullOrWhiteSpace(r.Description) && r.Description.Length > 100)
+            {
+              <p class="text-muted mb-4" style="min-height: 60px;">
+                @r.Description.Substring(0, Math.Min(100, r.Description.Length))...
+              </p>
+            }
+            else if (!string.IsNullOrWhiteSpace(r.Description))
+            {
+              <p class="text-muted mb-4" style="min-height: 60px;">@r.Description</p>
+            }
+            <a class="btn btn-primary w-100" href="/realisations/@r.Slug" style="border-radius: 8px;">
+              Voir les détails <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+  @if (!Model.Any())
+  {
+    <div class="text-center py-5">
+      <i class="bi bi-inbox" style="font-size: 4rem; color: #dee2e6;"></i>
+      <p class="text-muted mt-3">Aucune réalisation disponible pour le moment.</p>
+    </div>
+  }
+</div>
+
+<style>
+  .card:hover img {
+    transform: scale(1.1);
+  }
+</style>

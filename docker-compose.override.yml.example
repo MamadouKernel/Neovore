@@ -1,0 +1,19 @@
+# Fichier d'exemple pour les overrides de développement
+# Copiez ce fichier vers docker-compose.override.yml et modifiez selon vos besoins
+
+version: '3.8'
+
+services:
+  web:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080;https://+:8081
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    # Pour le développement, vous pouvez monter le code source
+    # volumes:
+    #   - .:/app
+    #   - /app/bin
+    #   - /app/obj
+

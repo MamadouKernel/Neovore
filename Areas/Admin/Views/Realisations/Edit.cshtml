@@ -1,0 +1,103 @@
+@model Neovore.Web.Domain.Entities.Realisation
+@{
+    ViewData["Title"] = "Modifier la réalisation";
+}
+<div class="page-header">
+  <h1 class="page-title">Modifier la réalisation</h1>
+  <p class="page-subtitle">@Model.Titre</p>
+</div>
+
+<div class="admin-card mb-4">
+  <div class="card-body p-4">
+    <form method="post" enctype="multipart/form-data">
+      @Html.AntiForgeryToken()
+
+      <div class="row g-4">
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Titre *</label>
+          <input asp-for="Titre" class="form-control" required />
+          <span asp-validation-for="Titre" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Slug (auto si vide)</label>
+          <input asp-for="Slug" class="form-control" />
+          <small class="text-muted">Laissez vide pour régénérer</small>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Secteur *</label>
+          <input asp-for="Secteur" class="form-control" required />
+          <span asp-validation-for="Secteur" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Publié</label>
+          <select asp-for="EstPublie" class="form-select">
+            <option value="true">Oui</option>
+            <option value="false">Non</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Commentaires activés</label>
+          <select asp-for="CommentairesActives" class="form-select">
+            <option value="true">Oui</option>
+            <option value="false">Non</option>
+          </select>
+        </div>
+
+        <div class="col-12">
+          <label class="form-label fw-bold">Description</label>
+          <textarea asp-for="Description" class="form-control" rows="5"></textarea>
+        </div>
+
+        <div class="col-12">
+          <label class="form-label fw-bold">Ajouter des images</label>
+          <input type="file" name="imageFiles" accept="image/*" multiple class="form-control" />
+          <small class="text-muted">Ajouter de nouvelles images à la galerie</small>
+        </div>
+      </div>
+
+      <div class="mt-4 d-flex gap-2">
+        <button class="btn btn-primary" type="submit">
+          <i class="bi bi-check-circle me-2"></i>Enregistrer
+        </button>
+        <a class="btn btn-outline-secondary" href="/Admin/Realisations">
+          <i class="bi bi-x-circle me-2"></i>Annuler
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+
+@if (Model.Medias?.Any() == true)
+{
+  <div class="admin-card">
+    <div class="card-body p-4">
+      <h3 class="h5 fw-bold mb-4">
+        <i class="bi bi-images me-2"></i>Galerie d'images
+      </h3>
+      <div class="row g-3">
+        @foreach (var media in Model.Medias.OrderBy(m => m.Ordre))
+        {
+          <div class="col-md-3">
+            <div class="position-relative">
+              <img src="@media.Url" alt="@media.Alt" class="img-fluid rounded border" style="height: 200px; width: 100%; object-fit: cover;" />
+              <form method="post" action="/Admin/Realisations/DeleteMedia/@media.Id" class="position-absolute top-0 end-0 m-2">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer cette image ?');">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </form>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}
+
+@section Scripts {
+  <partial name="_ValidationScriptsPartial" />
+}
+

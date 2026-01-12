@@ -1,0 +1,80 @@
+@model Neovore.Web.Domain.Entities.ServiceOffert
+@{
+    var isEdit = Model.Id > 0;
+    ViewData["Title"] = isEdit ? "Modifier service" : "Créer service";
+}
+<div class="page-header">
+  <h1 class="page-title">@ViewData["Title"]</h1>
+  <p class="page-subtitle">@Model.Titre</p>
+</div>
+
+<div class="admin-card">
+  <div class="card-body p-4">
+<form method="post" enctype="multipart/form-data">
+  @Html.AntiForgeryToken()
+
+  @if (!string.IsNullOrWhiteSpace(Model.ImageUrl))
+  {
+    <div class="mb-3">
+      <label class="form-label">Image actuelle</label>
+      <div>
+        <img src="@Model.ImageUrl" alt="@Model.Titre" class="img-thumbnail" style="max-height: 200px;" />
+      </div>
+      <small class="text-muted">Uploader une nouvelle image pour remplacer</small>
+    </div>
+  }
+
+  <div class="row g-3">
+    <div class="col-md-6">
+      <label class="form-label">Titre</label>
+      <input asp-for="Titre" class="form-control"/>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Slug (auto si vide)</label>
+      <input asp-for="Slug" class="form-control"/>
+    </div>
+    <div class="col-12">
+      <label class="form-label">Résumé</label>
+      <textarea asp-for="Resume" class="form-control" rows="2"></textarea>
+    </div>
+    <div class="col-12">
+      <label class="form-label">Image</label>
+      <input type="file" name="imageFile" accept="image/*" class="form-control" />
+      <div class="form-text">Formats acceptés : JPG, PNG, GIF. Laissez vide pour conserver l'image actuelle.</div>
+    </div>
+    <div class="col-12">
+      <label class="form-label">Contenu HTML</label>
+      <textarea asp-for="ContenuHtml" class="form-control" rows="6"></textarea>
+      <div class="form-text">V1 : contenu libre (tu peux coller du HTML simple).</div>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Ordre</label>
+      <input asp-for="Ordre" class="form-control" />
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Publié</label>
+      <select asp-for="EstPublie" class="form-select">
+        <option value="true">Oui</option>
+        <option value="false">Non</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Commentaires activés</label>
+      <select asp-for="CommentairesActives" class="form-select">
+        <option value="true">Oui</option>
+        <option value="false">Non</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="mt-4 d-flex gap-2">
+    <button class="btn btn-primary" type="submit">
+      <i class="bi bi-check-circle me-2"></i>Enregistrer
+    </button>
+    <a class="btn btn-outline-secondary" href="/Admin/Services">
+      <i class="bi bi-x-circle me-2"></i>Annuler
+    </a>
+  </div>
+</form>
+  </div>
+</div>

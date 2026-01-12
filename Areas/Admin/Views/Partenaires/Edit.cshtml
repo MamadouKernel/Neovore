@@ -1,0 +1,85 @@
+@model Neovore.Web.Domain.Entities.Partenaire
+@{
+    ViewData["Title"] = "Modifier le partenaire";
+}
+<div class="page-header">
+  <h1 class="page-title">Modifier le partenaire</h1>
+  <p class="page-subtitle">@Model.Nom</p>
+</div>
+
+<div class="admin-card">
+  <div class="card-body p-4">
+    <form method="post" enctype="multipart/form-data">
+      @Html.AntiForgeryToken()
+
+      @if (!string.IsNullOrWhiteSpace(Model.LogoUrl))
+      {
+        <div class="mb-3">
+          <label class="form-label fw-bold">Logo actuel</label>
+          <div>
+            <img src="@Model.LogoUrl" alt="@Model.Nom" style="max-height: 100px; border: 1px solid #dee2e6; border-radius: 8px; padding: 5px;" />
+          </div>
+        </div>
+      }
+
+      <div class="row g-4">
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Nom *</label>
+          <input asp-for="Nom" class="form-control" required />
+          <span asp-validation-for="Nom" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Type</label>
+          <select asp-for="TypePartenaire" class="form-select">
+            <option value="Client">Client</option>
+            <option value="Partenaire">Partenaire</option>
+            <option value="Fournisseur">Fournisseur</option>
+          </select>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Site web</label>
+          <input asp-for="SiteWeb" type="url" class="form-control" />
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Ordre</label>
+          <input asp-for="Ordre" type="number" class="form-control" />
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Publié</label>
+          <select asp-for="EstPublie" class="form-select">
+            <option value="true">Oui</option>
+            <option value="false">Non</option>
+          </select>
+        </div>
+
+        <div class="col-12">
+          <label class="form-label fw-bold">Nouveau logo (laisser vide pour conserver l'actuel)</label>
+          <input type="file" name="logoFile" accept="image/*" class="form-control" />
+        </div>
+
+        <div class="col-12">
+          <label class="form-label fw-bold">Description</label>
+          <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+        </div>
+      </div>
+
+      <div class="mt-4 d-flex gap-2">
+        <button class="btn btn-primary" type="submit">
+          <i class="bi bi-check-circle me-2"></i>Enregistrer
+        </button>
+        <a class="btn btn-outline-secondary" href="/Admin/Partenaires">
+          <i class="bi bi-x-circle me-2"></i>Annuler
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+
+@section Scripts {
+  <partial name="_ValidationScriptsPartial" />
+}
+

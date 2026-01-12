@@ -1,0 +1,117 @@
+@{
+    ViewData["Title"] = "Dashboard";
+}
+<div class="page-header">
+  <h1 class="page-title">
+    <i class="bi bi-speedometer2 me-2" style="color: #FF6B35;"></i>Dashboard
+  </h1>
+  <p class="page-subtitle">Vue d'ensemble de votre site et statistiques</p>
+</div>
+
+<div class="row g-4 mb-5">
+  <div class="col-12 col-sm-6 col-md-6 col-lg-3">
+    <div class="stat-card" style="--gradient: linear-gradient(135deg, #FF6B35 0%, #E63946 100%);">
+      <div class="stat-icon" style="background: linear-gradient(135deg, #FF6B35 0%, #E63946 100%); color: white;">
+        <i class="bi bi-file-earmark-text"></i>
+      </div>
+      <div class="stat-value">@ViewBag.NbDevis</div>
+      <div class="stat-label">Demandes de devis</div>
+      <a href="/Admin/Demandes/Devis" class="btn btn-sm btn-primary mt-3 w-100">
+        <i class="bi bi-arrow-right me-1"></i>Voir
+      </a>
+    </div>
+  </div>
+  
+  <div class="col-12 col-sm-6 col-md-6 col-lg-3">
+    <div class="stat-card" style="--gradient: linear-gradient(135deg, #E63946 0%, #F77F00 100%);">
+      <div class="stat-icon" style="background: linear-gradient(135deg, #E63946 0%, #F77F00 100%); color: white;">
+        <i class="bi bi-envelope"></i>
+      </div>
+      <div class="stat-value">@ViewBag.NbMessages</div>
+      <div class="stat-label">Messages contact</div>
+      <a href="/Admin/Demandes/Contacts" class="btn btn-sm btn-primary mt-3 w-100" style="background: linear-gradient(135deg, #E63946 0%, #F77F00 100%); border: none;">
+        <i class="bi bi-arrow-right me-1"></i>Voir
+      </a>
+    </div>
+  </div>
+  
+  <div class="col-12 col-sm-6 col-md-6 col-lg-3">
+    <div class="stat-card" style="--gradient: linear-gradient(135deg, #1E88E5 0%, #1565C0 100%);">
+      <div class="stat-icon" style="background: linear-gradient(135deg, #1E88E5 0%, #1565C0 100%); color: white;">
+        <i class="bi bi-box-seam"></i>
+      </div>
+      <div class="stat-value">@ViewBag.NbProduits</div>
+      <div class="stat-label">Produits</div>
+      <a href="/Admin/Produits" class="btn btn-sm btn-primary mt-3 w-100" style="background: linear-gradient(135deg, #1E88E5 0%, #1565C0 100%); border: none;">
+        <i class="bi bi-arrow-right me-1"></i>Gérer
+      </a>
+    </div>
+  </div>
+  
+  <div class="col-12 col-sm-6 col-md-6 col-lg-3">
+    <div class="stat-card" style="--gradient: linear-gradient(135deg, #1E88E5 0%, #42A5F5 100%);">
+      <div class="stat-icon" style="background: linear-gradient(135deg, #1E88E5 0%, #42A5F5 100%); color: white;">
+        <i class="bi bi-trophy"></i>
+      </div>
+      <div class="stat-value">@ViewBag.NbRealisations</div>
+      <div class="stat-label">Réalisations</div>
+      <a href="/Admin/Realisations" class="btn btn-sm btn-primary mt-3 w-100" style="background: linear-gradient(135deg, #1E88E5 0%, #42A5F5 100%); border: none;">
+        <i class="bi bi-arrow-right me-1"></i>Gérer
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-12 col-lg-8">
+    <div class="admin-card">
+      <div class="card-body p-4">
+        <h3 class="h5 fw-bold mb-4">
+          <i class="bi bi-lightning-charge me-2" style="color: #FF6B35;"></i>Actions rapides
+        </h3>
+        <div class="row g-3">
+          <div class="col-12 col-md-6">
+            <a href="/Admin/Services" class="btn btn-outline-primary w-100 d-flex align-items-center justify-content-center" style="padding: 1rem; border-radius: 12px;">
+              <i class="bi bi-gear me-2" style="font-size: 1.25rem;"></i>
+              <span>Gérer les services</span>
+            </a>
+          </div>
+          <div class="col-12 col-md-6">
+            <a href="/Admin/Produits" class="btn btn-outline-primary w-100 d-flex align-items-center justify-content-center" style="padding: 1rem; border-radius: 12px;">
+              <i class="bi bi-box-seam me-2" style="font-size: 1.25rem;"></i>
+              <span>Gérer les produits</span>
+            </a>
+          </div>
+          <div class="col-12 col-md-6">
+            <a href="/Admin/Realisations" class="btn btn-outline-primary w-100 d-flex align-items-center justify-content-center" style="padding: 1rem; border-radius: 12px;">
+              <i class="bi bi-trophy me-2" style="font-size: 1.25rem;"></i>
+              <span>Gérer les réalisations</span>
+            </a>
+          </div>
+          <div class="col-12 col-md-6">
+            <a href="/Admin/Settings" class="btn btn-outline-primary w-100 d-flex align-items-center justify-content-center" style="padding: 1rem; border-radius: 12px;">
+              <i class="bi bi-sliders me-2" style="font-size: 1.25rem;"></i>
+              <span>Paramètres du site</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-12 col-lg-4">
+    <div class="admin-card" style="background: linear-gradient(135deg, #FF6B3515 0%, #E6394615 100%);">
+      <div class="card-body p-4">
+        <h3 class="h5 fw-bold mb-3">
+          <i class="bi bi-info-circle me-2" style="color: #FF6B35;"></i>Astuce
+        </h3>
+        <p class="text-muted mb-0" style="line-height: 1.7;">
+          Commencez par configurer les <strong>paramètres du site</strong>, puis ajoutez vos services et produits pour enrichir votre site web.
+        </p>
+        <a href="/Admin/Settings" class="btn btn-primary mt-3 w-100">
+          <i class="bi bi-sliders me-1"></i>Aller aux paramètres
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

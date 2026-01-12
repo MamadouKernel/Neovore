@@ -1,0 +1,97 @@
+@model IEnumerable<Neovore.Web.Domain.Entities.AdminUser>
+@{
+    ViewData["Title"] = "Utilisateurs Admin";
+}
+<div class="page-header">
+  <div class="d-flex justify-content-between align-items-center">
+    <div>
+      <h1 class="page-title">Utilisateurs Admin</h1>
+      <p class="page-subtitle">Gérer les administrateurs et gestionnaires</p>
+    </div>
+    <a class="btn btn-primary" href="/Admin/AdminUsers/Create">
+      <i class="bi bi-plus-circle me-2"></i>Nouvel utilisateur
+    </a>
+  </div>
+</div>
+
+@if (TempData["Error"] != null)
+{
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <i class="bi bi-exclamation-triangle me-2"></i>@TempData["Error"]
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+}
+
+<div class="admin-card">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead>
+          <tr>
+            <th>Nom d'utilisateur</th>
+            <th>Rôle</th>
+            <th>Statut</th>
+            <th>Date de création</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var u in Model)
+          {
+            <tr>
+              <td><strong>@u.Username</strong></td>
+              <td>
+                @if (u.Role == "Admin")
+                {
+                  <span class="badge bg-danger">Administrateur</span>
+                }
+                else
+                {
+                  <span class="badge bg-primary">Gestionnaire</span>
+                }
+              </td>
+              <td>
+                @if (u.IsActive)
+                {
+                  <span class="badge bg-success">Actif</span>
+                }
+                else
+                {
+                  <span class="badge bg-secondary">Inactif</span>
+                }
+              </td>
+              <td>
+                <small class="text-muted">@u.CreatedAtUtc.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</small>
+              </td>
+              <td class="text-end">
+                <a class="btn btn-sm btn-outline-primary" href="/Admin/AdminUsers/Edit/@u.Id">
+                  <i class="bi bi-pencil me-1"></i>Modifier
+                </a>
+                @if (u.Username != User.Identity?.Name)
+                {
+                  <form method="post" action="/Admin/AdminUsers/Delete/@u.Id" class="d-inline">
+                    @Html.AntiForgeryToken()
+                    <button class="btn btn-sm btn-outline-danger" type="submit" onclick="return confirm('Supprimer cet utilisateur ?');">
+                      <i class="bi bi-trash me-1"></i>Supprimer
+                    </button>
+                  </form>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+      @if (!Model.Any())
+      {
+        <div class="text-center py-5">
+          <i class="bi bi-inbox" style="font-size: 3rem; color: #dee2e6;"></i>
+          <p class="text-muted mt-3">Aucun utilisateur admin pour le moment.</p>
+          <a href="/Admin/AdminUsers/Create" class="btn btn-primary mt-2">
+            <i class="bi bi-plus-circle me-2"></i>Créer le premier utilisateur
+          </a>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+

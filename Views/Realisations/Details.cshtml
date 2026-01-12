@@ -1,0 +1,126 @@
+@model Neovore.Web.Domain.Entities.Realisation
+@{
+    ViewData["Title"] = Model.Titre + " - NÉOVORE";
+}
+<div class="container py-4 py-lg-5">
+  <nav aria-label="breadcrumb" class="mb-4 mb-lg-5">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/" class="text-decoration-none">Accueil</a></li>
+      <li class="breadcrumb-item"><a href="/Realisations" class="text-decoration-none">Réalisations</a></li>
+      <li class="breadcrumb-item active" aria-current="page">@Model.Titre</li>
+    </ol>
+  </nav>
+
+  <div class="row">
+    <div class="col-lg-10 mx-auto">
+      <a class="btn btn-outline-secondary mb-4" href="/Realisations" style="border-radius: 8px;">
+        <i class="bi bi-arrow-left me-2"></i>Retour aux réalisations
+      </a>
+
+      <article class="card border-0 shadow-sm mb-4 mb-lg-5">
+        <div class="card-body p-5 p-lg-6">
+          <span class="badge bg-primary mb-3" style="border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.9rem;">
+            <i class="bi bi-building me-1"></i>@Model.Secteur
+          </span>
+          
+          <h1 class="display-4 fw-bold mb-3">@Model.Titre</h1>
+          
+          @if (!string.IsNullOrWhiteSpace(Model.Description))
+          {
+            <div class="lead text-muted mb-4" style="font-size: 1.2rem; line-height: 1.8;">
+              @Model.Description
+            </div>
+          }
+        </div>
+      </article>
+
+      @if (Model.Medias?.Any() == true)
+      {
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-body p-4">
+            <h2 class="h4 fw-bold mb-4">
+              <i class="bi bi-images me-2" style="color: #1E88E5;"></i>Galerie photos
+            </h2>
+            <div class="row g-3">
+              @foreach (var m in Model.Medias.OrderBy(x => x.Ordre))
+              {
+                <div class="col-6 col-md-4 col-lg-3">
+                  <div class="position-relative overflow-hidden rounded shadow-sm" style="border-radius: 12px; cursor: pointer;" onclick="openImageModal('@m.Url', '@m.Alt')">
+                    <img class="img-fluid w-100" 
+                         src="@m.Url" 
+                         alt="@m.Alt" 
+                         style="height: 200px; object-fit: cover; transition: transform 0.3s ease;">
+                    <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center" 
+                         style="background: rgba(0,0,0,0); transition: background 0.3s ease;">
+                      <i class="bi bi-zoom-in text-white" style="font-size: 2rem; opacity: 0; transition: opacity 0.3s ease;"></i>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      }
+
+      @{
+        var commentairesVm = ViewData["CommentairesPartial"] as Neovore.Web.ViewModels.CommentairePartialVm;
+      }
+      @if (commentairesVm != null)
+      {
+        <partial name="_CommentairesPartial" model="commentairesVm" />
+      }
+
+      <div class="card border-0 shadow-sm mt-4" style="background: linear-gradient(135deg, #1E88E5 0%, #1565C0 100%); border-radius: 16px;">
+        <div class="card-body p-4 text-white text-center">
+          <h3 class="h5 fw-bold mb-3">
+            <i class="bi bi-lightbulb me-2"></i>Vous avez un projet similaire ?
+          </h3>
+          <p class="mb-4">Discutons de votre projet et découvrons comment nous pouvons vous aider.</p>
+          <div class="d-flex flex-wrap gap-3 justify-content-center">
+            <a class="btn btn-light" href="/devis" style="border-radius: 50px;">
+              <i class="bi bi-file-earmark-text me-2"></i>Demander un devis
+            </a>
+            <a class="btn btn-outline-light" href="/contact" style="border-radius: 50px; border-width: 2px;">
+              <i class="bi bi-envelope me-2"></i>Nous contacter
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal pour agrandir les images -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content border-0" style="background: transparent;">
+      <div class="modal-header border-0">
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-0">
+        <img id="modalImage" src="" alt="" class="img-fluid rounded" style="border-radius: 12px;">
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openImageModal(url, alt) {
+    document.getElementById('modalImage').src = url;
+    document.getElementById('modalImage').alt = alt;
+    var modal = new bootstrap.Modal(document.getElementById('imageModal'));
+    modal.show();
+  }
+</script>
+
+<style>
+  .position-relative:hover img {
+    transform: scale(1.1);
+  }
+  .position-relative:hover .position-absolute {
+    background: rgba(0,0,0,0.5) !important;
+  }
+  .position-relative:hover .bi-zoom-in {
+    opacity: 1 !important;
+  }
+</style>

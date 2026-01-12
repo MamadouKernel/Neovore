@@ -1,0 +1,96 @@
+@model IEnumerable<Neovore.Web.Domain.Entities.DemandeDevis>
+@{
+    ViewData["Title"] = "Demandes de devis";
+}
+<div class="page-header">
+  <h1 class="page-title">Demandes de devis</h1>
+  <p class="page-subtitle">Gérer les demandes de devis reçues</p>
+</div>
+
+<div class="admin-card">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Nom / Société</th>
+            <th>Contact</th>
+            <th>Besoin</th>
+            <th>Statut</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var d in Model)
+          {
+            <tr>
+              <td>
+                <small>@d.CreatedAtUtc.ToLocalTime().ToString("dd/MM/yyyy")</small><br>
+                <small class="text-muted">@d.CreatedAtUtc.ToLocalTime().ToString("HH:mm")</small>
+              </td>
+              <td>
+                <strong>@d.Nom</strong><br>
+                <small class="text-muted">@d.Societe</small>
+              </td>
+              <td>
+                <div><i class="bi bi-envelope me-1"></i><small>@d.Email</small></div>
+                <div><i class="bi bi-telephone me-1"></i><small>@d.Telephone</small></div>
+              </td>
+              <td>
+                <div><strong>Secteur:</strong> @d.Secteur</div>
+                <div><strong>Type:</strong> @d.TypeBesoin</div>
+                @if (!string.IsNullOrWhiteSpace(d.Message))
+                {
+                  <details class="mt-2">
+                    <summary class="small text-primary" style="cursor: pointer;">Voir le message</summary>
+                    <div class="small text-muted mt-1">@d.Message</div>
+                  </details>
+                }
+              </td>
+              <td>
+                @if (d.Statut == "Nouveau")
+                {
+                  <span class="badge bg-warning text-dark">Nouveau</span>
+                }
+                else if (d.Statut == "EnCours")
+                {
+                  <span class="badge bg-info">En cours</span>
+                }
+                else if (d.Statut == "Traite")
+                {
+                  <span class="badge bg-success">Traité</span>
+                }
+                else
+                {
+                  <span class="badge bg-secondary">@d.Statut</span>
+                }
+              </td>
+              <td class="text-end">
+                <form method="post" action="/Admin/Demandes/MajStatutDevis" class="d-inline-flex gap-2">
+                  @Html.AntiForgeryToken()
+                  <input type="hidden" name="id" value="@d.Id" />
+                  <select name="statut" class="form-select form-select-sm" style="width: auto;">
+                    <option value="Nouveau" selected="@(d.Statut=="Nouveau")">Nouveau</option>
+                    <option value="EnCours" selected="@(d.Statut=="EnCours")">En cours</option>
+                    <option value="Traite" selected="@(d.Statut=="Traite")">Traité</option>
+                  </select>
+                  <button class="btn btn-sm btn-primary" type="submit">
+                    <i class="bi bi-check"></i>
+                  </button>
+                </form>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+      @if (!Model.Any())
+      {
+        <div class="text-center py-5">
+          <i class="bi bi-inbox" style="font-size: 3rem; color: #dee2e6;"></i>
+          <p class="text-muted mt-3">Aucune demande de devis pour le moment.</p>
+        </div>
+      }
+    </div>
+  </div>
+</div>

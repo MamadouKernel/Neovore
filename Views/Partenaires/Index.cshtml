@@ -1,0 +1,62 @@
+@model IEnumerable<Neovore.Web.Domain.Entities.Partenaire>
+@{
+    ViewData["Title"] = "Nos partenaires - NÉOVORE";
+}
+<div class="container py-4 py-lg-5">
+  <div class="row mb-5 mb-lg-6">
+    <div class="col-lg-8 mx-auto text-center">
+      <h1 class="display-4 fw-bold mb-3">
+        <i class="bi bi-people-fill me-3" style="color: #FF6B35;"></i>Nos partenaires
+      </h1>
+      <p class="lead text-muted">
+        Découvrez nos clients et partenaires de confiance qui nous font confiance pour leurs projets.
+      </p>
+    </div>
+  </div>
+
+  <div class="row g-4 g-lg-5">
+    @foreach (var p in Model)
+    {
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm text-center" style="padding: 2rem;">
+          @if (!string.IsNullOrWhiteSpace(p.LogoUrl))
+          {
+            <div class="mb-4" style="height: 150px; display: flex; align-items: center; justify-content: center;">
+              <img src="@p.LogoUrl" alt="@p.Nom" class="img-fluid" style="max-height: 100%; max-width: 100%; object-fit: contain;" />
+            </div>
+          }
+          else
+          {
+            <div class="mb-4" style="height: 150px; display: flex; align-items: center; justify-content: center;">
+              <i class="bi bi-building" style="font-size: 4rem; color: #dee2e6;"></i>
+            </div>
+          }
+          <h3 class="h5 fw-bold mb-2">@p.Nom</h3>
+          @if (!string.IsNullOrWhiteSpace(p.TypePartenaire))
+          {
+            <span class="badge bg-primary mb-3" style="border-radius: 6px;">@p.TypePartenaire</span>
+          }
+          @if (!string.IsNullOrWhiteSpace(p.Description))
+          {
+            <p class="text-muted mb-3">@p.Description</p>
+          }
+          @if (!string.IsNullOrWhiteSpace(p.SiteWeb))
+          {
+            <a href="@p.SiteWeb" target="_blank" rel="noopener noreferrer" class="btn btn-outline-primary btn-sm">
+              <i class="bi bi-link-45deg me-1"></i>Site web
+            </a>
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+  @if (!Model.Any())
+  {
+    <div class="text-center py-5">
+      <i class="bi bi-inbox" style="font-size: 4rem; color: #dee2e6;"></i>
+      <p class="text-muted mt-3">Aucun partenaire disponible pour le moment.</p>
+    </div>
+  }
+</div>
+

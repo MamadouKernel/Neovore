@@ -1,0 +1,97 @@
+@model Neovore.Web.Domain.Entities.MembreEquipe
+@{
+    ViewData["Title"] = "Modifier le membre";
+}
+<div class="page-header">
+  <h1 class="page-title">Modifier le membre</h1>
+  <p class="page-subtitle">@Model.Prenom @Model.Nom</p>
+</div>
+
+<div class="admin-card">
+  <div class="card-body p-4">
+    <form method="post" enctype="multipart/form-data">
+      @Html.AntiForgeryToken()
+
+      @if (!string.IsNullOrWhiteSpace(Model.PhotoUrl))
+      {
+        <div class="mb-3">
+          <label class="form-label fw-bold">Photo actuelle</label>
+          <div>
+            <img src="@Model.PhotoUrl" alt="@Model.Nom @Model.Prenom" class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover; border: 2px solid #dee2e6;" />
+          </div>
+        </div>
+      }
+
+      <div class="row g-4">
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Nom *</label>
+          <input asp-for="Nom" class="form-control" required />
+          <span asp-validation-for="Nom" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Prénom *</label>
+          <input asp-for="Prenom" class="form-control" required />
+          <span asp-validation-for="Prenom" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Poste</label>
+          <input asp-for="Poste" class="form-control" />
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Ordre</label>
+          <input asp-for="Ordre" type="number" class="form-control" />
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Email</label>
+          <input asp-for="Email" type="email" class="form-control" />
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Téléphone</label>
+          <input asp-for="Telephone" class="form-control" />
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">LinkedIn</label>
+          <input asp-for="LinkedInUrl" type="url" class="form-control" />
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Publié</label>
+          <select asp-for="EstPublie" class="form-select">
+            <option value="true">Oui</option>
+            <option value="false">Non</option>
+          </select>
+        </div>
+
+        <div class="col-12">
+          <label class="form-label fw-bold">Nouvelle photo (laisser vide pour conserver l'actuelle)</label>
+          <input type="file" name="photoFile" accept="image/*" class="form-control" />
+        </div>
+
+        <div class="col-12">
+          <label class="form-label fw-bold">Description</label>
+          <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+        </div>
+      </div>
+
+      <div class="mt-4 d-flex gap-2">
+        <button class="btn btn-primary" type="submit">
+          <i class="bi bi-check-circle me-2"></i>Enregistrer
+        </button>
+        <a class="btn btn-outline-secondary" href="/Admin/Equipe">
+          <i class="bi bi-x-circle me-2"></i>Annuler
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+
+@section Scripts {
+  <partial name="_ValidationScriptsPartial" />
+}
+

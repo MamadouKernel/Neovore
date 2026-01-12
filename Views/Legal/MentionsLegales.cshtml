@@ -1,0 +1,95 @@
+@using Neovore.Web.Application.Services
+@inject Neovore.Web.Application.Services.SettingsService SettingsService
+@{
+    ViewData["Title"] = "Mentions légales - NÉOVORE";
+    var settings = await SettingsService.GetAsync();
+}
+<div class="container py-4 py-lg-5">
+  <div class="row">
+    <div class="col-lg-10 mx-auto">
+      <h1 class="display-5 fw-bold mb-4">Mentions légales</h1>
+      
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-4 p-lg-5">
+          <h2 class="h4 fw-bold mb-3">1. Éditeur du site</h2>
+          <p class="mb-3">
+            Le site <strong>@(settings?.NomEntreprise ?? "NÉOVORE")</strong> est édité par :
+          </p>
+          <div class="ms-4">
+            <p class="mb-2"><strong>@(settings?.NomEntreprise ?? "NÉOVORE")</strong></p>
+            @if (!string.IsNullOrWhiteSpace(settings?.Adresse))
+            {
+              <p class="mb-2"><i class="bi bi-geo-alt me-2"></i>@settings.Adresse</p>
+            }
+            @if (!string.IsNullOrWhiteSpace(settings?.TelephoneContact))
+            {
+              <p class="mb-2"><i class="bi bi-telephone me-2"></i>@settings.TelephoneContact</p>
+            }
+            @if (!string.IsNullOrWhiteSpace(settings?.EmailContact))
+            {
+              <p class="mb-2"><i class="bi bi-envelope me-2"></i><a href="mailto:@settings.EmailContact">@settings.EmailContact</a></p>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-4 p-lg-5">
+          <h2 class="h4 fw-bold mb-3">2. Hébergement</h2>
+          <p class="mb-0">
+            Le site est hébergé par un prestataire technique. Pour toute question concernant l'hébergement, veuillez nous contacter.
+          </p>
+        </div>
+      </div>
+
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-4 p-lg-5">
+          <h2 class="h4 fw-bold mb-3">3. Propriété intellectuelle</h2>
+          <p class="mb-3">
+            L'ensemble du contenu de ce site (textes, images, logos, graphismes, etc.) est la propriété exclusive de <strong>@(settings?.NomEntreprise ?? "NÉOVORE")</strong>, sauf mention contraire.
+          </p>
+          <p class="mb-0">
+            Toute reproduction, représentation, modification, publication, adaptation de tout ou partie des éléments du site, quel que soit le moyen ou le procédé utilisé, est interdite sans autorisation écrite préalable.
+          </p>
+        </div>
+      </div>
+
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-4 p-lg-5">
+          <h2 class="h4 fw-bold mb-3">4. Responsabilité</h2>
+          <p class="mb-3">
+            <strong>@(settings?.NomEntreprise ?? "NÉOVORE")</strong> s'efforce de fournir sur le site des informations aussi précises que possible. Toutefois, il ne pourra être tenu responsable des omissions, des inexactitudes et des carences dans la mise à jour.
+          </p>
+          <p class="mb-0">
+            Les informations contenues sur ce site sont données à titre indicatif et sont susceptibles d'évoluer. Par ailleurs, les renseignements figurant sur le site ne sont pas exhaustifs.
+          </p>
+        </div>
+      </div>
+
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-4 p-lg-5">
+          <h2 class="h4 fw-bold mb-3">5. Liens hypertextes</h2>
+          <p class="mb-0">
+            Le site peut contenir des liens hypertextes vers d'autres sites présents sur le réseau Internet. Les liens vers ces autres sites n'engagent en aucun cas la responsabilité de <strong>@(settings?.NomEntreprise ?? "NÉOVORE")</strong> quant au contenu de ces sites.
+          </p>
+        </div>
+      </div>
+
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-4 p-lg-5">
+          <h2 class="h4 fw-bold mb-3">6. Droit applicable</h2>
+          <p class="mb-0">
+            Les présentes mentions légales sont régies par le droit français. Tout litige en relation avec l'utilisation du site est soumis au droit français.
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <a class="btn btn-outline-secondary" href="/" style="border-radius: 8px;">
+          <i class="bi bi-arrow-left me-2"></i>Retour à l'accueil
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+

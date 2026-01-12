@@ -1,0 +1,96 @@
+@model IEnumerable<Neovore.Web.Domain.Entities.ContactMessage>
+@{
+    ViewData["Title"] = "Messages contact";
+}
+<div class="page-header">
+  <h1 class="page-title">Messages contact</h1>
+  <p class="page-subtitle">Gérer les messages reçus</p>
+</div>
+
+<div class="admin-card">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Nom</th>
+            <th>Contact</th>
+            <th>Sujet</th>
+            <th>Message</th>
+            <th>Statut</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var m in Model)
+          {
+            <tr>
+              <td>
+                <small>@m.CreatedAtUtc.ToLocalTime().ToString("dd/MM/yyyy")</small><br>
+                <small class="text-muted">@m.CreatedAtUtc.ToLocalTime().ToString("HH:mm")</small>
+              </td>
+              <td><strong>@m.Nom</strong></td>
+              <td>
+                <div><i class="bi bi-envelope me-1"></i><small>@m.Email</small></div>
+                @if (!string.IsNullOrWhiteSpace(m.Telephone))
+                {
+                  <div><i class="bi bi-telephone me-1"></i><small>@m.Telephone</small></div>
+                }
+              </td>
+              <td>@m.Sujet</td>
+              <td>
+                @if (!string.IsNullOrWhiteSpace(m.Message))
+                {
+                  <details>
+                    <summary class="small text-primary" style="cursor: pointer;">Voir le message</summary>
+                    <div class="small text-muted mt-1" style="white-space: pre-wrap;">@m.Message</div>
+                  </details>
+                }
+              </td>
+              <td>
+                @if (m.Statut == "Nouveau")
+                {
+                  <span class="badge bg-warning text-dark">Nouveau</span>
+                }
+                else if (m.Statut == "EnCours")
+                {
+                  <span class="badge bg-info">En cours</span>
+                }
+                else if (m.Statut == "Traite")
+                {
+                  <span class="badge bg-success">Traité</span>
+                }
+                else
+                {
+                  <span class="badge bg-secondary">@m.Statut</span>
+                }
+              </td>
+              <td class="text-end">
+                <form method="post" action="/Admin/Demandes/MajStatutContact" class="d-inline-flex gap-2">
+                  @Html.AntiForgeryToken()
+                  <input type="hidden" name="id" value="@m.Id" />
+                  <select name="statut" class="form-select form-select-sm" style="width: auto;">
+                    <option value="Nouveau" selected="@(m.Statut=="Nouveau")">Nouveau</option>
+                    <option value="EnCours" selected="@(m.Statut=="EnCours")">En cours</option>
+                    <option value="Traite" selected="@(m.Statut=="Traite")">Traité</option>
+                  </select>
+                  <button class="btn btn-sm btn-primary" type="submit">
+                    <i class="bi bi-check"></i>
+                  </button>
+                </form>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+      @if (!Model.Any())
+      {
+        <div class="text-center py-5">
+          <i class="bi bi-inbox" style="font-size: 3rem; color: #dee2e6;"></i>
+          <p class="text-muted mt-3">Aucun message pour le moment.</p>
+        </div>
+      }
+    </div>
+  </div>
+</div>

@@ -1,0 +1,76 @@
+@model IEnumerable<Neovore.Web.Domain.Entities.MembreEquipe>
+@{
+    ViewData["Title"] = "Notre équipe - NÉOVORE";
+}
+<div class="container py-4 py-lg-5">
+  <div class="row mb-5 mb-lg-6">
+    <div class="col-lg-8 mx-auto text-center">
+      <h1 class="display-4 fw-bold mb-3">
+        <i class="bi bi-people-fill me-3" style="color: #FF6B35;"></i>Notre équipe
+      </h1>
+      <p class="lead text-muted">
+        Rencontrez les experts qui composent notre équipe et qui travaillent chaque jour pour votre satisfaction.
+      </p>
+    </div>
+  </div>
+
+  <div class="row g-4 g-lg-5">
+    @foreach (var m in Model)
+    {
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm text-center">
+          <div class="card-body p-4 p-lg-5">
+            @if (!string.IsNullOrWhiteSpace(m.PhotoUrl))
+            {
+              <img src="@m.PhotoUrl" alt="@m.Prenom @m.Nom" class="rounded-circle mb-4" style="width: 150px; height: 150px; object-fit: cover; border: 4px solid #f0f0f0;" />
+            }
+            else
+            {
+              <div class="mb-4 mx-auto rounded-circle d-flex align-items-center justify-content-center" style="width: 150px; height: 150px; background: linear-gradient(135deg, #FF6B35 0%, #E63946 100%);">
+                <i class="bi bi-person text-white" style="font-size: 4rem;"></i>
+              </div>
+            }
+            <h3 class="h5 fw-bold mb-2">@m.Prenom @m.Nom</h3>
+            @if (!string.IsNullOrWhiteSpace(m.Poste))
+            {
+              <p class="text-primary fw-bold mb-3">@m.Poste</p>
+            }
+            @if (!string.IsNullOrWhiteSpace(m.Description))
+            {
+              <p class="text-muted mb-4">@m.Description</p>
+            }
+            <div class="d-flex justify-content-center gap-3">
+              @if (!string.IsNullOrWhiteSpace(m.Email))
+              {
+                <a href="mailto:@m.Email" class="text-decoration-none" title="Email">
+                  <i class="bi bi-envelope" style="font-size: 1.5rem; color: #FF6B35;"></i>
+                </a>
+              }
+              @if (!string.IsNullOrWhiteSpace(m.LinkedInUrl))
+              {
+                <a href="@m.LinkedInUrl" target="_blank" rel="noopener noreferrer" class="text-decoration-none" title="LinkedIn">
+                  <i class="bi bi-linkedin" style="font-size: 1.5rem; color: #FF6B35;"></i>
+                </a>
+              }
+              @if (!string.IsNullOrWhiteSpace(m.Telephone))
+              {
+                <a href="tel:@m.Telephone" class="text-decoration-none" title="Téléphone">
+                  <i class="bi bi-telephone" style="font-size: 1.5rem; color: #FF6B35;"></i>
+                </a>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+  @if (!Model.Any())
+  {
+    <div class="text-center py-5">
+      <i class="bi bi-inbox" style="font-size: 4rem; color: #dee2e6;"></i>
+      <p class="text-muted mt-3">Aucun membre d'équipe disponible pour le moment.</p>
+    </div>
+  }
+</div>
+

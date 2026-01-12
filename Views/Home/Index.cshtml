@@ -1,0 +1,498 @@
+@{
+    ViewData["Title"] = "Accueil - NÉOVORE";
+    var services = ViewBag.Services as IEnumerable<Neovore.Web.Domain.Entities.ServiceOffert>;
+    var realisations = ViewBag.Realisations as IEnumerable<Neovore.Web.Domain.Entities.Realisation>;
+    var produits = ViewBag.Produits as IEnumerable<Neovore.Web.Domain.Entities.Produit>;
+}
+
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, #FF6B35 0%, #E63946 100%);
+        padding: 4rem 1.5rem;
+        border-radius: 24px;
+        position: relative;
+        overflow: hidden;
+        margin: 0 auto 3rem;
+        width: 100%;
+        max-width: 100%;
+        box-shadow: 0 20px 60px rgba(255, 107, 53, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
+        animation: heroFadeIn 1s ease-out;
+        backdrop-filter: blur(10px);
+    }
+    
+    .hero-wrapper {
+        padding-top: 3rem;
+    }
+    
+    @@keyframes heroFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -20%;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+        border-radius: 50%;
+        animation: float 20s infinite ease-in-out;
+        filter: blur(40px);
+    }
+    
+    .hero-section::after {
+        content: '';
+        position: absolute;
+        bottom: -30%;
+        left: -10%;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+        border-radius: 50%;
+        animation: float 15s infinite ease-in-out reverse;
+        filter: blur(30px);
+    }
+    
+    @@keyframes float {
+        0%, 100% { 
+            transform: translate(0, 0) rotate(0deg) scale(1);
+            opacity: 0.6;
+        }
+        33% { 
+            transform: translate(30px, -30px) rotate(120deg) scale(1.1);
+            opacity: 0.8;
+        }
+        66% { 
+            transform: translate(-20px, 20px) rotate(240deg) scale(0.9);
+            opacity: 0.7;
+        }
+    }
+    
+    .hero-section:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 25px 70px rgba(255, 107, 53, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.15);
+    }
+    
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        animation: contentSlideIn 1.2s ease-out 0.3s both;
+    }
+    
+    @@keyframes contentSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .hero-section h1 {
+        animation: titleGlow 3s ease-in-out infinite;
+        text-shadow: 0 2px 20px rgba(0,0,0,0.2), 0 0 40px rgba(255,255,255,0.1);
+    }
+    
+    @@keyframes titleGlow {
+        0%, 100% {
+            text-shadow: 0 2px 20px rgba(0,0,0,0.2), 0 0 40px rgba(255,255,255,0.1);
+        }
+        50% {
+            text-shadow: 0 2px 30px rgba(0,0,0,0.3), 0 0 60px rgba(255,255,255,0.15);
+        }
+    }
+    
+    .hero-section .btn {
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+    }
+    
+    .hero-section .btn::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+        z-index: -1;
+    }
+    
+    .hero-section .btn:hover::before {
+        width: 300px;
+        height: 300px;
+    }
+    
+    .hero-section .btn:hover {
+        transform: translateY(-4px) scale(1.05);
+        box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+    }
+    
+    .hero-section .btn:active {
+        transform: translateY(-2px) scale(1.02);
+    }
+    
+    .fade-in-up {
+        animation: fadeInUp 0.8s ease-out;
+    }
+    
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .card-hover {
+        transition: all 0.3s ease;
+    }
+    
+    .card-hover:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 40px rgba(0,0,0,0.15) !important;
+    }
+    
+    .stat-card {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        text-align: center;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        border: 1px solid #f0f0f0;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(255, 107, 53, 0.2);
+        border-color: #FF6B35;
+    }
+    
+    .stat-number {
+        font-size: 3rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #FF6B35 0%, #E63946 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+    }
+    
+    .section-title {
+        position: relative;
+        padding-bottom: 1rem;
+        margin-bottom: 3rem;
+    }
+    
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(135deg, #FF6B35 0%, #E63946 100%);
+        border-radius: 2px;
+    }
+    
+    .gradient-text {
+        background: linear-gradient(135deg, #FF6B35 0%, #E63946 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .cta-section {
+        background: linear-gradient(135deg, #1E88E5 0%, #1565C0 100%);
+        border-radius: 24px;
+        padding: 4rem 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .cta-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -20%;
+        width: 500px;
+        height: 500px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+    }
+    
+    .btn-pulse {
+        animation: pulse 2s infinite;
+    }
+    
+    @@keyframes pulse {
+        0%, 100% {
+            box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.7);
+        }
+        50% {
+            box-shadow: 0 0 0 10px rgba(255, 107, 53, 0);
+        }
+    }
+</style>
+
+  <!-- Hero Section améliorée -->
+  <div class="hero-wrapper">
+  <section class="hero-section text-center text-white fade-in-up">
+    <div class="hero-content">
+      <div class="container-fluid">
+        <div class="row justify-content-center">
+          <div class="col-lg-9">
+            <h1 class="display-3 fw-bold mb-4" style="text-shadow: 0 2px 20px rgba(0,0,0,0.2);">
+              Solutions écologiques & industrielles
+            </h1>
+            <p class="lead mb-5" style="font-size: 1.35rem; opacity: 0.95; text-shadow: 0 1px 10px rgba(0,0,0,0.1);">
+              Installation électrique, groupes électrogènes, cuisine haut de gamme,<br class="d-none d-md-block">
+              froid industriel, audit énergétique. Expertise et qualité au service de votre entreprise.
+            </p>
+            <div class="d-flex flex-wrap gap-3 justify-content-center">
+              <a class="btn btn-light btn-lg px-5 py-3 fw-bold" href="/devis" style="border-radius: 50px; font-size: 1.1rem; box-shadow: 0 4px 20px rgba(0,0,0,0.2);">
+                <i class="bi bi-file-earmark-text me-2"></i>Demander un devis
+              </a>
+              <a class="btn btn-outline-light btn-lg px-5 py-3 fw-bold" href="/contact" style="border-radius: 50px; border-width: 2px; font-size: 1.1rem;">
+                <i class="bi bi-envelope me-2"></i>Nous contacter
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  </div>
+
+<div class="container py-4 py-lg-5">
+  <!-- Statistiques/Valeurs -->
+  <section class="mb-5 mb-lg-6 fade-in-up">
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="stat-card">
+          <div class="stat-number">@(ViewBag.AnneeExperience ?? "+10")</div>
+          <div class="text-muted fw-bold" style="font-size: 1.1rem;">Années d'expérience</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stat-card">
+          <div class="stat-number">@(ViewBag.ProjetsRealises ?? "500+")</div>
+          <div class="text-muted fw-bold" style="font-size: 1.1rem;">Projets réalisés</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stat-card">
+          <div class="stat-number">@(ViewBag.SatisfactionClient ?? "100%")</div>
+          <div class="text-muted fw-bold" style="font-size: 1.1rem;">Satisfaction client</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Section améliorée -->
+  <section class="mb-5 mb-lg-6 fade-in-up">
+    <div class="text-center mb-5 animate-on-scroll">
+      <h2 class="section-title display-4 fw-bold mx-auto" style="display: inline-block;">
+        <i class="bi bi-gear-fill me-2 gradient-text"></i>Nos services
+      </h2>
+      <p class="lead text-muted mt-3">
+        Des solutions complètes pour répondre à tous vos besoins professionnels
+      </p>
+    </div>
+    <div class="row g-4">
+      @foreach (var s in services ?? Enumerable.Empty<Neovore.Web.Domain.Entities.ServiceOffert>())
+      {
+        <div class="col-md-6 col-lg-4">
+          <div class="card h-100 border-0 shadow-sm overflow-hidden card-hover">
+            @if (!string.IsNullOrWhiteSpace(s.ImageUrl))
+            {
+              <div style="height: 220px; overflow: hidden; background: linear-gradient(135deg, #FF6B35 0%, #E63946 100%);">
+                <img src="@s.ImageUrl" 
+                     alt="@s.Titre" 
+                     class="img-fluid w-100 h-100" 
+                     style="object-fit: cover; transition: transform 0.3s ease;">
+              </div>
+            }
+            else
+            {
+              <div style="height: 220px; background: linear-gradient(135deg, #FF6B35 0%, #E63946 100%); display: flex; align-items: center; justify-content: center;">
+                <i class="bi bi-gear-fill text-white" style="font-size: 4rem; opacity: 0.5;"></i>
+              </div>
+            }
+            <div class="card-body p-4">
+              <h3 class="h5 fw-bold mb-2">@s.Titre</h3>
+              <p class="text-muted mb-3" style="min-height: 48px;">@s.Resume</p>
+              <a class="btn btn-primary btn-sm w-100" href="/services/@s.Slug" style="border-radius: 8px;">
+                Découvrir <i class="bi bi-arrow-right ms-1"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- Produits Section améliorée -->
+  <section class="mb-5 mb-lg-6 fade-in-up">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h2 class="section-title display-4 fw-bold mb-2" style="display: inline-block;">
+          <i class="bi bi-box-seam-fill me-2 gradient-text"></i>Nos produits
+        </h2>
+        <p class="text-muted mb-0">Des équipements de qualité pour tous vos projets</p>
+      </div>
+      <a href="/Produits" class="btn btn-outline-primary btn-lg d-none d-md-block" style="border-radius: 50px;">
+        Voir tout <i class="bi bi-arrow-right ms-2"></i>
+      </a>
+    </div>
+    <div class="row g-4">
+      @foreach (var p in produits ?? Enumerable.Empty<Neovore.Web.Domain.Entities.Produit>())
+      {
+        <div class="col-md-6 col-lg-4">
+          <div class="card h-100 border-0 shadow-sm overflow-hidden card-hover">
+            @if (p.Medias?.Any() == true)
+            {
+              <div style="height: 220px; overflow: hidden; background: linear-gradient(135deg, #FF6B35 0%, #E63946 100%);">
+                <img src="@p.Medias.OrderBy(x => x.Ordre).First().Url" 
+                     alt="@p.Medias.OrderBy(x => x.Ordre).First().Alt" 
+                     class="img-fluid w-100 h-100" 
+                     style="object-fit: cover; transition: transform 0.3s ease;">
+              </div>
+            }
+            else
+            {
+              <div style="height: 220px; background: linear-gradient(135deg, #FF6B35 0%, #E63946 100%); display: flex; align-items: center; justify-content: center;">
+                <i class="bi bi-box-seam text-white" style="font-size: 4rem; opacity: 0.5;"></i>
+              </div>
+            }
+            <div class="card-body p-4">
+              @if (p.Categorie != null)
+              {
+                <span class="badge bg-primary mb-2" style="border-radius: 6px; font-size: 0.85rem;">@p.Categorie.Nom</span>
+              }
+              <h3 class="h5 fw-bold mb-2">@p.Nom</h3>
+              <p class="text-muted mb-3" style="min-height: 48px;">
+                @(p.Description?.Length > 80 ? p.Description.Substring(0, 80) + "..." : p.Description)
+              </p>
+              <a class="btn btn-primary btn-sm w-100" href="/produits/@p.Slug" style="border-radius: 8px;">
+                Découvrir <i class="bi bi-arrow-right ms-1"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+    <div class="text-center mt-4 d-md-none">
+      <a href="/Produits" class="btn btn-outline-primary" style="border-radius: 50px;">
+        Voir tous les produits <i class="bi bi-arrow-right ms-2"></i>
+      </a>
+    </div>
+  </section>
+
+  <!-- Réalisations Section améliorée -->
+  <section class="mb-5 mb-lg-6 fade-in-up">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h2 class="section-title display-4 fw-bold mb-2" style="display: inline-block;">
+          <i class="bi bi-trophy-fill me-2" style="color: #1E88E5;"></i>Nos réalisations
+        </h2>
+        <p class="text-muted mb-0">Des projets qui témoignent de notre expertise</p>
+      </div>
+      <a href="/Realisations" class="btn btn-outline-primary btn-lg d-none d-md-block" style="border-radius: 50px;">
+        Voir tout <i class="bi bi-arrow-right ms-2"></i>
+      </a>
+    </div>
+    <div class="row g-4">
+      @foreach (var r in realisations ?? Enumerable.Empty<Neovore.Web.Domain.Entities.Realisation>())
+      {
+        <div class="col-md-6 col-lg-4">
+          <div class="card h-100 border-0 shadow-sm overflow-hidden card-hover">
+            @if (r.Medias?.Any() == true)
+            {
+              <div style="height: 220px; overflow: hidden; background: linear-gradient(135deg, #1E88E5 0%, #1565C0 100%);">
+                <img src="@r.Medias.OrderBy(x => x.Ordre).First().Url" 
+                     alt="@r.Medias.OrderBy(x => x.Ordre).First().Alt" 
+                     class="img-fluid w-100 h-100" 
+                     style="object-fit: cover; transition: transform 0.3s ease;">
+              </div>
+            }
+            else
+            {
+              <div style="height: 220px; background: linear-gradient(135deg, #1E88E5 0%, #1565C0 100%); display: flex; align-items: center; justify-content: center;">
+                <i class="bi bi-trophy-fill text-white" style="font-size: 4rem; opacity: 0.5;"></i>
+              </div>
+            }
+            <div class="card-body p-4">
+              @if (!string.IsNullOrWhiteSpace(r.Secteur))
+              {
+                <span class="badge bg-primary mb-2" style="border-radius: 6px; font-size: 0.85rem;">
+                  <i class="bi bi-building me-1"></i>@r.Secteur
+                </span>
+              }
+              <h3 class="h5 fw-bold mb-2">@r.Titre</h3>
+              @if (!string.IsNullOrWhiteSpace(r.Description))
+              {
+                <p class="text-muted mb-3" style="min-height: 48px;">
+                  @(r.Description.Length > 80 ? r.Description.Substring(0, 80) + "..." : r.Description)
+                </p>
+              }
+              <a class="btn btn-primary btn-sm w-100" href="/realisations/@r.Slug" style="border-radius: 8px;">
+                Détails <i class="bi bi-arrow-right ms-1"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+    <div class="text-center mt-4 d-md-none">
+      <a href="/Realisations" class="btn btn-outline-primary" style="border-radius: 50px;">
+        Voir toutes les réalisations <i class="bi bi-arrow-right ms-2"></i>
+      </a>
+    </div>
+  </section>
+
+  <!-- Call to Action Section améliorée -->
+  <section class="mb-5 mb-lg-6 fade-in-up">
+    <div class="cta-section text-white">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-8">
+            <div class="mb-4 mb-lg-0">
+              <h3 class="h2 fw-bold mb-3" style="text-shadow: 0 2px 10px rgba(0,0,0,0.2);">
+                <i class="bi bi-graph-up-arrow me-2"></i>Audit énergétique gratuit
+              </h3>
+              <p class="lead mb-0" style="opacity: 0.95; font-size: 1.2rem;">
+                Nous analysons vos consommations et vous proposons des solutions concrètes pour réduire les coûts énergétiques de votre entreprise.
+              </p>
+            </div>
+          </div>
+          <div class="col-lg-4 text-center text-lg-end">
+            <a class="btn btn-light btn-lg px-5 py-3 fw-bold btn-pulse" href="/devis" style="border-radius: 50px; font-size: 1.1rem; box-shadow: 0 4px 20px rgba(0,0,0,0.2);">
+              <i class="bi bi-calendar-check me-2"></i>Prendre RDV
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+

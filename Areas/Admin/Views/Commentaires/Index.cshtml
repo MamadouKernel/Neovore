@@ -1,0 +1,127 @@
+@model IEnumerable<Neovore.Web.Domain.Entities.Commentaire>
+@{
+    ViewData["Title"] = "Commentaires";
+}
+<div class="page-header">
+  <h1 class="page-title">Commentaires</h1>
+  <p class="page-subtitle">Modérer les commentaires des utilisateurs</p>
+</div>
+
+<div class="admin-card">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Auteur</th>
+            <th>Type</th>
+            <th>Message</th>
+            <th>Note</th>
+            <th>Statut</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var c in Model)
+          {
+            <tr class="@(c.EstApprouve ? "table-success" : c.EstRejete ? "table-danger" : "table-warning")">
+              <td>
+                <small>@c.CreatedAtUtc.ToLocalTime().ToString("dd/MM/yyyy")</small><br>
+                <small class="text-muted">@c.CreatedAtUtc.ToLocalTime().ToString("HH:mm")</small>
+              </td>
+              <td>
+                <strong>@c.Nom</strong><br>
+                <small class="text-muted">@c.Email</small>
+              </td>
+              <td>
+                @if (c.ServiceOffertId.HasValue)
+                {
+                  <span class="badge bg-info">Service</span>
+                }
+                else if (c.ProduitId.HasValue)
+                {
+                  <span class="badge bg-primary">Produit</span>
+                }
+                else if (c.RealisationId.HasValue)
+                {
+                  <span class="badge bg-warning text-dark">Réalisation</span>
+                }
+              </td>
+              <td>
+                <div style="max-width: 300px;">
+                  @if (c.Message.Length > 100)
+                  {
+                    <span>@c.Message.Substring(0, 100)...</span>
+                  }
+                  else
+                  {
+                    <span>@c.Message</span>
+                  }
+                </div>
+              </td>
+              <td>
+                @if (c.Note.HasValue)
+                {
+                  @for (int i = 1; i <= 5; i++)
+                  {
+                    <i class="bi @(i <= c.Note.Value ? "bi-star-fill" : "bi-star") text-warning"></i>
+                  }
+                }
+                else
+                {
+                  <span class="text-muted">-</span>
+                }
+              </td>
+              <td>
+                @if (c.EstApprouve)
+                {
+                  <span class="badge bg-success">Approuvé</span>
+                }
+                else if (c.EstRejete)
+                {
+                  <span class="badge bg-danger">Rejeté</span>
+                }
+                else
+                {
+                  <span class="badge bg-warning text-dark">En attente</span>
+                }
+              </td>
+              <td class="text-end">
+                @if (!c.EstApprouve && !c.EstRejete)
+                {
+                  <form method="post" action="/Admin/Commentaires/Approuver/@c.Id" class="d-inline">
+                    @Html.AntiForgeryToken()
+                    <button class="btn btn-sm btn-success" type="submit" title="Approuver">
+                      <i class="bi bi-check-circle"></i>
+                    </button>
+                  </form>
+                  <form method="post" action="/Admin/Commentaires/Rejeter/@c.Id" class="d-inline">
+                    @Html.AntiForgeryToken()
+                    <button class="btn btn-sm btn-warning" type="submit" title="Rejeter">
+                      <i class="bi bi-x-circle"></i>
+                    </button>
+                  </form>
+                }
+                <form method="post" action="/Admin/Commentaires/Supprimer/@c.Id" class="d-inline">
+                  @Html.AntiForgeryToken()
+                  <button class="btn btn-sm btn-danger" type="submit" onclick="return confirm('Supprimer ce commentaire ?');" title="Supprimer">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </form>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+      @if (!Model.Any())
+      {
+        <div class="text-center py-5">
+          <i class="bi bi-inbox" style="font-size: 3rem; color: #dee2e6;"></i>
+          <p class="text-muted mt-3">Aucun commentaire pour le moment.</p>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,68 @@
+@model Neovore.Web.Domain.Entities.AdminUser
+@{
+    ViewData["Title"] = "Créer un utilisateur";
+}
+<div class="page-header">
+  <h1 class="page-title">Créer un utilisateur admin</h1>
+  <p class="page-subtitle">Ajouter un nouvel administrateur ou gestionnaire</p>
+</div>
+
+<div class="admin-card">
+  <div class="card-body p-4">
+    <form method="post">
+      @Html.AntiForgeryToken()
+
+      @if (!ViewData.ModelState.IsValid)
+      {
+        <div class="alert alert-danger">
+          @Html.ValidationSummary(false)
+        </div>
+      }
+
+      <div class="row g-4">
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Nom d'utilisateur *</label>
+          <input asp-for="Username" class="form-control" required />
+          <span asp-validation-for="Username" class="text-danger small"></span>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Rôle *</label>
+          <select asp-for="Role" class="form-select" required>
+            <option value="Admin">Administrateur</option>
+            <option value="Editeur">Gestionnaire</option>
+          </select>
+          <small class="text-muted">Les administrateurs ont tous les droits. Les gestionnaires peuvent gérer le contenu.</small>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Mot de passe *</label>
+          <input type="password" name="password" class="form-control" required minlength="6" />
+          <small class="text-muted">Minimum 6 caractères</small>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold">Statut</label>
+          <select asp-for="IsActive" class="form-select">
+            <option value="true">Actif</option>
+            <option value="false">Inactif</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="mt-4 d-flex gap-2">
+        <button class="btn btn-primary" type="submit">
+          <i class="bi bi-check-circle me-2"></i>Créer l'utilisateur
+        </button>
+        <a class="btn btn-outline-secondary" href="/Admin/AdminUsers">
+          <i class="bi bi-x-circle me-2"></i>Annuler
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+
+@section Scripts {
+  <partial name="_ValidationScriptsPartial" />
+}
+
