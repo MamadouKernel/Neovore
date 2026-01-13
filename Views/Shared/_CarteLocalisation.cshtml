@@ -1,0 +1,89 @@
+@using Neovore.Web.Application.Services
+@inject SettingsService SettingsService
+@{
+    var settings = await SettingsService.GetAsync();
+}
+
+@if (settings != null && settings.AfficherCarte == true)
+{
+    <div class="row mt-5 mb-4">
+        <div class="col-12">
+            <h2 class="h4 fw-bold mb-4 text-center">
+                <i class="bi bi-geo-alt-fill me-2"></i>Notre localisation
+            </h2>
+            
+            @if (!string.IsNullOrWhiteSpace(settings.GoogleMapsIframe))
+            {
+                <!-- Afficher l'iframe Google Maps responsive -->
+                <div class="google-map-responsive" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.1);">
+                    @{
+                        var iframeCode = settings.GoogleMapsIframe.Trim();
+                        // Remplacer width et height
+                        iframeCode = System.Text.RegularExpressions.Regex.Replace(iframeCode, @"width=""[^""]*""", "width=\"100%\"");
+                        iframeCode = System.Text.RegularExpressions.Regex.Replace(iframeCode, @"height=""[^""]*""", "height=\"100%\"");
+                        // Ajouter ou modifier le style
+                        if (iframeCode.Contains("style=\""))
+                        {
+                            iframeCode = System.Text.RegularExpressions.Regex.Replace(iframeCode, @"style=""([^""]*)""", "style=\"position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;\"");
+                        }
+                        else
+                        {
+                            iframeCode = System.Text.RegularExpressions.Regex.Replace(iframeCode, @"(<iframe[^>]*)(>)", "$1 style=\"position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;\"$2");
+                        }
+                    }
+                    @Html.Raw(iframeCode)
+                </div>
+                
+                @* Afficher l'adresse sous la map *@
+                @if (!string.IsNullOrEmpty(settings.Adresse))
+                {
+                    <div class="text-center mt-3">
+                        <p class="mb-0">
+                            <i class="bi bi-geo-alt me-2"></i><strong>@settings.Adresse</strong>
+                        </p>
+                    </div>
+                }
+            }
+            else if (settings.Latitude.HasValue && settings.Longitude.HasValue)
+            {
+                <!-- Fallback : Afficher la carte Leaflet si pas d'iframe mais coordonnées disponibles -->
+                <div id="map" style="height: 400px; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.1);"></div>
+                
+                <!-- Leaflet CSS -->
+                <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+                <!-- Leaflet JS -->
+                <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        // Initialiser la carte
+                        var map = L.map('map').setView([@settings.Latitude.Value.ToString(System.Globalization.CultureInfo.InvariantCulture), @settings.Longitude.Value.ToString(System.Globalization.CultureInfo.InvariantCulture)], 15);
+
+                        // Ajouter la couche de tuiles OpenStreetMap
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                            maxZoom: 19
+                        }).addTo(map);
+
+                        // Ajouter un marqueur
+                        var marker = L.marker([@settings.Latitude.Value.ToString(System.Globalization.CultureInfo.InvariantCulture), @settings.Longitude.Value.ToString(System.Globalization.CultureInfo.InvariantCulture)])
+                            .addTo(map)
+                            .bindPopup('<strong>@Html.Raw(settings.NomEntreprise)</strong><br/>@Html.Raw(settings.Adresse ?? "")')
+                            .openPopup();
+                    });
+                </script>
+                
+                @* Afficher l'adresse sous la map (carte Leaflet) *@
+                @if (!string.IsNullOrEmpty(settings.Adresse))
+                {
+                    <div class="text-center mt-3">
+                        <p class="mb-0">
+                            <i class="bi bi-geo-alt me-2"></i><strong>@settings.Adresse</strong>
+                        </p>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+}
+

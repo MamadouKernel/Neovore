@@ -29,4 +29,11 @@ public class SiteSettings : BaseEntity
     
     // Mode d'affichage
     public bool ModeSombre { get; set; } = false;                 // Mode sombre activé ou non
+    
+    // Géolocalisation pour la carte
+    public string? GoogleMapsIframe { get; set; }                 // Code iframe Google Maps (optionnel - méthode recommandée)
+    public string? GoogleMapsUrl { get; set; }                    // Lien Google Maps (optionnel - pour extraction coordonnées)
+    public decimal? Latitude { get; set; }                        // Latitude (extraite depuis le lien Google Maps ou géocodée depuis l'adresse)
+    public decimal? Longitude { get; set; }                       // Longitude (extraite depuis le lien Google Maps ou géocodée depuis l'adresse)
+    public bool AfficherCarte { get; set; } = false;              // Afficher la carte sur le site
 }

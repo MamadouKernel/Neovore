@@ -46,6 +46,7 @@ builder.Services.AddAuthorization(options =>
 
 // Infrastructure
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpClient<IGeocodingService, GeocodingService>();
 builder.Services.AddScoped<IFileStorage, LocalFileStorage>();
 builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
 
@@ -123,6 +124,44 @@ using (var scope = app.Services.CreateScope())
                     WHERE table_name = 'SiteSettings' AND column_name = 'ModeSombre'
                 ) THEN
                     ALTER TABLE ""SiteSettings"" ADD COLUMN ""ModeSombre"" boolean NOT NULL DEFAULT false;
+                END IF;
+                
+                -- GoogleMapsUrl
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns 
+                    WHERE table_name = 'SiteSettings' AND column_name = 'GoogleMapsUrl'
+                ) THEN
+                    ALTER TABLE ""SiteSettings"" ADD COLUMN ""GoogleMapsUrl"" text NULL;
+                END IF;
+                
+                -- GoogleMapsIframe
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns 
+                    WHERE table_name = 'SiteSettings' AND column_name = 'GoogleMapsIframe'
+                ) THEN
+                    ALTER TABLE ""SiteSettings"" ADD COLUMN ""GoogleMapsIframe"" text NULL;
+                END IF;
+                
+                -- Géolocalisation
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns 
+                    WHERE table_name = 'SiteSettings' AND column_name = 'AfficherCarte'
+                ) THEN
+                    ALTER TABLE ""SiteSettings"" ADD COLUMN ""AfficherCarte"" boolean NOT NULL DEFAULT false;
+                END IF;
+                
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns 
+                    WHERE table_name = 'SiteSettings' AND column_name = 'Latitude'
+                ) THEN
+                    ALTER TABLE ""SiteSettings"" ADD COLUMN ""Latitude"" numeric NULL;
+                END IF;
+                
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns 
+                    WHERE table_name = 'SiteSettings' AND column_name = 'Longitude'
+                ) THEN
+                    ALTER TABLE ""SiteSettings"" ADD COLUMN ""Longitude"" numeric NULL;
                 END IF;
             END $$;
         ");

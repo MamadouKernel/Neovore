@@ -62,9 +62,74 @@
         </div>
 
         <div class="col-12">
-          <label class="form-label fw-bold">Adresse</label>
-          <input asp-for="Adresse" class="form-control" placeholder="Adresse complète" />
+          <label class="form-label fw-bold">
+            <i class="bi bi-geo-alt me-2"></i>Adresse
+          </label>
+          <input asp-for="Adresse" class="form-control" placeholder="Rue, quartier, commune (ex: 2 plateaux, Cocody, Abidjan)" />
+          <div class="form-text">
+            <i class="bi bi-info-circle me-1"></i>
+            <strong>Important :</strong> Ce champ doit contenir une <strong>adresse textuelle</strong> (ex: "2 plateaux, Cocody, Abidjan"). 
+            Cette adresse s'affichera dans le footer et sous la carte sur le site.
+            <strong class="text-danger">PAS un lien Google Maps ou un code iframe</strong>.
+          </div>
           <span asp-validation-for="Adresse" class="text-danger small"></span>
+        </div>
+
+        <div class="col-12 mt-4">
+          <h5 class="fw-bold mb-3">
+            <i class="bi bi-map me-2" style="color: #FF6B35;"></i>Carte interactive
+          </h5>
+        </div>
+
+        <div class="col-12">
+          <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" asp-for="AfficherCarte" id="afficherCarte" style="width: 3rem; height: 1.5rem; cursor: pointer;" />
+            <label class="form-check-label fw-bold" for="afficherCarte">
+              <i class="bi bi-map-fill me-2"></i>Afficher la carte sur le site
+            </label>
+            <div class="form-text">
+              Activez cette option pour afficher une carte interactive avec votre localisation sur la page Contact.
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <label class="form-label fw-bold">
+            <i class="bi bi-code-square me-2"></i>Code iframe Google Maps <span class="text-muted small">(recommandé)</span>
+          </label>
+          <textarea asp-for="GoogleMapsIframe" class="form-control" rows="4" placeholder='&lt;iframe src="https://www.google.com/maps/embed?pb=..." width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"&gt;&lt;/iframe&gt;'></textarea>
+          <div class="form-text">
+            <i class="bi bi-lightbulb me-1"></i>
+            <strong>Méthode recommandée :</strong> Collez ici le code iframe Google Maps de votre localisation. La carte s'affichera directement sur le site.
+            <br/>
+            <small>
+              <strong>Comment obtenir le code iframe ?</strong><br/>
+              1. Allez sur <a href="https://www.google.com/maps" target="_blank">Google Maps</a><br/>
+              2. Recherchez votre adresse ou cliquez sur votre localisation<br/>
+              3. Cliquez sur "Partager" → "Intégrer une carte" → "Copier le code HTML"<br/>
+              4. Collez le code complet ici
+            </small>
+          </div>
+          <span asp-validation-for="GoogleMapsIframe" class="text-danger small"></span>
+        </div>
+
+        @if (Model.AfficherCarte && Model.Latitude.HasValue && Model.Longitude.HasValue)
+        {
+          <div class="col-12">
+            <div class="alert alert-success small">
+              <i class="bi bi-check-circle me-2"></i>
+              <strong>Coordonnées GPS détectées :</strong><br/>
+              Latitude : @Model.Latitude.Value.ToString("F6")<br/>
+              Longitude : @Model.Longitude.Value.ToString("F6")
+            </div>
+          </div>
+        }
+
+        <div class="col-12">
+          <div class="alert alert-success small">
+            <i class="bi bi-check-circle me-2"></i>
+            <strong>Méthode recommandée :</strong> Utilisez le code iframe Google Maps ci-dessus. La carte s'affichera directement sur votre site avec toutes les fonctionnalités de Google Maps (navigation, itinéraires, etc.).
+          </div>
         </div>
 
         <div class="col-12 mt-4">
@@ -163,7 +228,15 @@
             <input type="color" asp-for="CouleurPrimaire" class="form-control form-control-color" value="@(Model.CouleurPrimaire ?? "#FF6B35")" title="Choisir la couleur primaire" />
             <input type="text" asp-for="CouleurPrimaire" class="form-control" placeholder="#FF6B35" pattern="^#[0-9A-Fa-f]{6}$" />
           </div>
-          <small class="text-muted">Couleur principale utilisée pour les boutons, liens et éléments importants</small>
+          <div class="mt-2 p-2 bg-light rounded small">
+            <strong>Utilisée pour :</strong>
+            <ul class="mb-0 ps-3">
+              <li>Boutons principaux (CTA)</li>
+              <li>Liens de navigation</li>
+              <li>Éléments d'action importants</li>
+              <li>Bordures de focus</li>
+            </ul>
+          </div>
           <span asp-validation-for="CouleurPrimaire" class="text-danger small"></span>
         </div>
 
@@ -175,7 +248,15 @@
             <input type="color" asp-for="CouleurSecondaire" class="form-control form-control-color" value="@(Model.CouleurSecondaire ?? "#E63946")" title="Choisir la couleur secondaire" />
             <input type="text" asp-for="CouleurSecondaire" class="form-control" placeholder="#E63946" pattern="^#[0-9A-Fa-f]{6}$" />
           </div>
-          <small class="text-muted">Couleur utilisée pour les éléments secondaires et les accents</small>
+          <div class="mt-2 p-2 bg-light rounded small">
+            <strong>Utilisée pour :</strong>
+            <ul class="mb-0 ps-3">
+              <li>Boutons secondaires</li>
+              <li>Badges et étiquettes</li>
+              <li>Éléments de mise en évidence</li>
+              <li>Gradients et effets visuels</li>
+            </ul>
+          </div>
           <span asp-validation-for="CouleurSecondaire" class="text-danger small"></span>
         </div>
 
@@ -187,7 +268,15 @@
             <input type="color" asp-for="CouleurAccent" class="form-control form-control-color" value="@(Model.CouleurAccent ?? "#1E88E5")" title="Choisir la couleur d'accent" />
             <input type="text" asp-for="CouleurAccent" class="form-control" placeholder="#1E88E5" pattern="^#[0-9A-Fa-f]{6}$" />
           </div>
-          <small class="text-muted">Couleur utilisée pour les éléments d'accentuation et les liens</small>
+          <div class="mt-2 p-2 bg-light rounded small">
+            <strong>Utilisée pour :</strong>
+            <ul class="mb-0 ps-3">
+              <li>Titres et sous-titres (h1, h2, h3)</li>
+              <li>Liens hypertexte</li>
+              <li>Icônes importantes</li>
+              <li>Footer et sections d'accentuation</li>
+            </ul>
+          </div>
           <span asp-validation-for="CouleurAccent" class="text-danger small"></span>
         </div>
 
@@ -199,8 +288,23 @@
             <input type="color" asp-for="CouleurOr" class="form-control form-control-color" value="@(Model.CouleurOr ?? "#dbb438")" title="Choisir la couleur or" />
             <input type="text" asp-for="CouleurOr" class="form-control" placeholder="#dbb438" pattern="^#[0-9A-Fa-f]{6}$" />
           </div>
-          <small class="text-muted">Couleur or utilisée pour les éléments premium et les highlights</small>
+          <div class="mt-2 p-2 bg-light rounded small">
+            <strong>Utilisée pour :</strong>
+            <ul class="mb-0 ps-3">
+              <li>Éléments premium/vip</li>
+              <li>Highlights et promotions</li>
+              <li>Éléments de distinction</li>
+              <li>Badges spéciaux</li>
+            </ul>
+          </div>
           <span asp-validation-for="CouleurOr" class="text-danger small"></span>
+        </div>
+
+        <div class="col-12 mt-3">
+          <div class="alert alert-info small">
+            <i class="bi bi-info-circle me-2"></i>
+            <strong>Note :</strong> Les paragraphes et textes utilisent la couleur de texte par défaut du thème (noir en mode jour, blanc en mode nuit). Les couleurs personnalisées s'appliquent principalement aux éléments interactifs et de mise en forme.
+          </div>
         </div>
 
         <div class="col-12 mt-4">
@@ -304,6 +408,7 @@
         modeToggle.addEventListener('change', updateModeStatus);
         updateModeStatus(); // Initialiser au chargement
       }
+      
     });
   </script>
 }
