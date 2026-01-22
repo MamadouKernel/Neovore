@@ -1,0 +1,700 @@
+@using Neovore.Web.Domain.Entities
+@using Neovore.Web.Application.Services
+@inject SettingsService SettingsService
+@{
+    ViewData["Title"] = "À propos - NÉOVORE";
+    var settings = ViewBag.Settings as SiteSettings;
+    var equipe = ViewBag.Equipe as List<MembreEquipe> ?? new List<MembreEquipe>();
+    var partenaires = ViewBag.Partenaires as List<Partenaire> ?? new List<Partenaire>();
+}
+<div class="about-page">
+  <!-- Hero Section -->
+  <div class="about-hero">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 mx-auto text-center">
+          <div class="hero-icon mb-4">
+            <i class="bi bi-building"></i>
+          </div>
+          <h1 class="display-3 fw-bold mb-4">À propos de @(settings?.NomEntreprise ?? "NÉOVORE")</h1>
+          <p class="lead text-white-50 mb-0">
+            Votre partenaire de confiance pour des solutions écologiques et industrielles d'excellence
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container py-5">
+    <!-- Notre Histoire -->
+    <section class="about-section mb-5">
+      <div class="row align-items-center">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+          <div class="section-image">
+            <div class="image-placeholder">
+              <i class="bi bi-building"></i>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="section-content">
+            <span class="section-badge">Notre Histoire</span>
+            <h2 class="section-title">Qui sommes-nous ?</h2>
+            @if (!string.IsNullOrWhiteSpace(settings?.TexteHistoire))
+            {
+              <div class="section-text">
+                @Html.Raw(settings.TexteHistoire.Replace("\n", "<br />"))
+              </div>
+            }
+            else
+            {
+              <p class="section-text">
+                @(settings?.NomEntreprise ?? "NÉOVORE") est une entreprise spécialisée dans les solutions écologiques et industrielles. 
+                Avec plus de <strong>@(settings?.AnneesExperience ?? "+10")</strong> d'expérience, nous avons réalisé 
+                <strong>@(settings?.ProjetsRealises ?? "500+")</strong> projets avec un taux de satisfaction client de 
+                <strong>@(settings?.SatisfactionClient ?? "100%")</strong>.
+              </p>
+              <p class="section-text">
+                Nous sommes fiers de notre engagement envers l'excellence, l'innovation et la satisfaction client. 
+                Notre équipe d'experts travaille sans relâche pour offrir des solutions sur mesure qui répondent 
+                aux besoins spécifiques de chaque client.
+              </p>
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Nos Valeurs -->
+    <section class="values-section mb-5">
+      <div class="section-header text-center mb-5">
+        <span class="section-badge">Nos Valeurs</span>
+        <h2 class="section-title">Ce qui nous guide</h2>
+        <p class="section-subtitle">Les principes qui façonnent notre approche et notre engagement</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-3">
+          <div class="value-card">
+            <div class="value-icon">
+              <i class="bi bi-star-fill"></i>
+            </div>
+            <h3 class="value-title">Excellence</h3>
+            <p class="value-text">@(!string.IsNullOrWhiteSpace(settings?.TexteValeurExcellence) ? settings.TexteValeurExcellence : "Nous visons l'excellence dans chaque projet que nous entreprenons.")</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="value-card">
+            <div class="value-icon">
+              <i class="bi bi-lightbulb-fill"></i>
+            </div>
+            <h3 class="value-title">Innovation</h3>
+            <p class="value-text">@(!string.IsNullOrWhiteSpace(settings?.TexteValeurInnovation) ? settings.TexteValeurInnovation : "Nous adoptons les dernières technologies pour offrir des solutions modernes.")</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="value-card">
+            <div class="value-icon">
+              <i class="bi bi-heart-fill"></i>
+            </div>
+            <h3 class="value-title">Engagement</h3>
+            <p class="value-text">@(!string.IsNullOrWhiteSpace(settings?.TexteValeurEngagement) ? settings.TexteValeurEngagement : "Nous nous engageons à dépasser les attentes de nos clients.")</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="value-card">
+            <div class="value-icon">
+              <i class="bi bi-shield-check-fill"></i>
+            </div>
+            <h3 class="value-title">Fiabilité</h3>
+            <p class="value-text">@(!string.IsNullOrWhiteSpace(settings?.TexteValeurFiabilite) ? settings.TexteValeurFiabilite : "Vous pouvez compter sur nous pour des solutions durables et fiables.")</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Statistiques -->
+    <section class="stats-section mb-5">
+      <div class="stats-container">
+        <div class="row g-4">
+          <div class="col-md-4">
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="bi bi-calendar-check"></i>
+              </div>
+              <div class="stat-value">@(settings?.AnneesExperience ?? "+10")</div>
+              <div class="stat-label">Années d'expérience</div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="bi bi-trophy"></i>
+              </div>
+              <div class="stat-value">@(settings?.ProjetsRealises ?? "500+")</div>
+              <div class="stat-label">Projets réalisés</div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="bi bi-emoji-smile"></i>
+              </div>
+              <div class="stat-value">@(settings?.SatisfactionClient ?? "100%")</div>
+              <div class="stat-label">Satisfaction client</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Notre Équipe -->
+    @if (equipe.Any())
+    {
+      <section class="team-section mb-5">
+        <div class="section-header text-center mb-5">
+          <span class="section-badge">Notre Équipe</span>
+          <h2 class="section-title">Rencontrez nos experts</h2>
+          <p class="section-subtitle">Une équipe passionnée et dévouée à votre succès</p>
+        </div>
+        <div class="row g-4">
+          @foreach (var membre in equipe)
+          {
+            <div class="col-md-6 col-lg-4">
+              <div class="team-card">
+                <div class="team-image">
+                  @if (!string.IsNullOrEmpty(membre.PhotoUrl))
+                  {
+                    <img src="@membre.PhotoUrl" alt="@membre.Nom" class="w-100 h-100" style="object-fit: cover;">
+                  }
+                  else
+                  {
+                    <div class="team-placeholder">
+                      <i class="bi bi-person"></i>
+                    </div>
+                  }
+                </div>
+                <div class="team-content">
+                  <h3 class="team-name">@membre.Prenom @membre.Nom</h3>
+                  @if (!string.IsNullOrEmpty(membre.Poste))
+                  {
+                    <p class="team-role">@membre.Poste</p>
+                  }
+                  @if (!string.IsNullOrEmpty(membre.Description))
+                  {
+                    <p class="team-bio">@membre.Description</p>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+    }
+
+    <!-- Nos Partenaires -->
+    @if (partenaires.Any())
+    {
+      <section class="partners-section mb-5">
+        <div class="section-header text-center mb-5">
+          <span class="section-badge">Nos Partenaires</span>
+          <h2 class="section-title">Ils nous font confiance</h2>
+          <p class="section-subtitle">Des partenariats solides pour des solutions d'excellence</p>
+        </div>
+        <div class="row g-4">
+          @foreach (var partenaire in partenaires)
+          {
+            <div class="col-6 col-md-4 col-lg-3">
+              <div class="partner-card">
+                @if (!string.IsNullOrEmpty(partenaire.LogoUrl))
+                {
+                  <img src="@partenaire.LogoUrl" alt="@partenaire.Nom" class="partner-logo">
+                }
+                else
+                {
+                  <div class="partner-placeholder">
+                    <i class="bi bi-building"></i>
+                    <span>@partenaire.Nom</span>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </section>
+    }
+
+    <!-- Contact CTA -->
+    <section class="contact-cta">
+      <div class="cta-card">
+        <div class="cta-content">
+          <div class="cta-icon">
+            <i class="bi bi-envelope-heart"></i>
+          </div>
+          <h3 class="cta-title">Prêt à démarrer votre projet ?</h3>
+          <p class="cta-text">Contactez-nous dès aujourd'hui pour discuter de vos besoins</p>
+          <div class="cta-buttons">
+            <a class="btn btn-cta-primary" href="/contact">
+              <i class="bi bi-envelope me-2"></i>Nous contacter
+            </a>
+            <a class="btn btn-cta-secondary" href="/devis">
+              <i class="bi bi-file-earmark-text me-2"></i>Demander un devis
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<style>
+  .about-page {
+    min-height: 100vh;
+    background: linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%);
+  }
+
+  /* Hero Section */
+  .about-hero {
+    background: linear-gradient(135deg, var(--primary-color, #FF6B35) 0%, var(--primary-dark, #E63946) 100%);
+    padding: 5rem 0 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .about-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>');
+    opacity: 0.3;
+  }
+
+  .about-hero .container {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-icon {
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    margin: 0 auto;
+  }
+
+  .hero-icon i {
+    font-size: 2.5rem;
+    color: white;
+  }
+
+  .about-hero h1 {
+    color: white;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Section Styles */
+  .about-section {
+    padding: 3rem 0;
+  }
+
+  .section-image {
+    position: relative;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  }
+
+  .image-placeholder {
+    width: 100%;
+    padding-top: 75%;
+    background: linear-gradient(135deg, var(--primary-color, #FF6B35) 0%, var(--primary-dark, #E63946) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .image-placeholder i {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 5rem;
+    color: rgba(255, 255, 255, 0.3);
+  }
+
+  .section-content {
+    padding: 2rem;
+  }
+
+  .section-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: linear-gradient(135deg, var(--secondary-color, #1E88E5) 0%, var(--secondary-color, #1E88E5) 100%);
+    color: white;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 1.5rem;
+  }
+
+  .section-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #64748b;
+    margin-bottom: 1rem;
+  }
+
+  .section-subtitle {
+    font-size: 1.1rem;
+    color: #64748b;
+    margin: 0;
+  }
+
+  .section-header {
+    margin-bottom: 3rem;
+  }
+
+  /* Values Cards */
+  .value-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 100%;
+  }
+
+  .value-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+  }
+
+  .value-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--primary-color, #FF6B35) 0%, var(--primary-dark, #E63946) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+  }
+
+  .value-icon i {
+    font-size: 2rem;
+    color: white;
+  }
+
+  .value-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 1rem;
+  }
+
+  .value-text {
+    color: #64748b;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* Stats Section */
+  .stats-section {
+    padding: 3rem 0;
+  }
+
+  .stats-container {
+    background: linear-gradient(135deg, var(--primary-color, #FF6B35) 0%, var(--primary-dark, #E63946) 100%);
+    border-radius: 24px;
+    padding: 4rem 2rem;
+    box-shadow: 0 8px 32px rgba(255, 107, 53, 0.3);
+  }
+
+  .stat-card {
+    text-align: center;
+    color: white;
+  }
+
+  .stat-icon {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    backdrop-filter: blur(10px);
+  }
+
+  .stat-icon i {
+    font-size: 2rem;
+    color: white;
+  }
+
+  .stat-value {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-label {
+    font-size: 1.1rem;
+    opacity: 0.9;
+  }
+
+  /* Team Section */
+  .team-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .team-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+  }
+
+  .team-image {
+    width: 100%;
+    padding-top: 100%;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  }
+
+  .team-image img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .team-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .team-placeholder i {
+    font-size: 4rem;
+    color: #cbd5e1;
+  }
+
+  .team-content {
+    padding: 1.5rem;
+    text-align: center;
+  }
+
+  .team-name {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+  }
+
+  .team-role {
+    font-size: 1rem;
+    color: var(--primary-color, #FF6B35);
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+  }
+
+  .team-bio {
+    font-size: 0.9rem;
+    color: #64748b;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* Partners Section */
+  .partner-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 120px;
+    transition: all 0.3s ease;
+  }
+
+  .partner-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  .partner-logo {
+    max-width: 100%;
+    max-height: 80px;
+    object-fit: contain;
+  }
+
+  .partner-placeholder {
+    text-align: center;
+    color: #64748b;
+  }
+
+  .partner-placeholder i {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Contact CTA */
+  .contact-cta {
+    padding: 3rem 0;
+  }
+
+  .cta-card {
+    background: linear-gradient(135deg, var(--secondary-color, #1E88E5) 0%, var(--secondary-color, #1E88E5) 100%);
+    border-radius: 24px;
+    padding: 4rem 3rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(30, 136, 229, 0.3);
+  }
+
+  .cta-content {
+    position: relative;
+    z-index: 1;
+    color: white;
+  }
+
+  .cta-icon {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    backdrop-filter: blur(10px);
+  }
+
+  .cta-icon i {
+    font-size: 2.5rem;
+    color: white;
+  }
+
+  .cta-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .cta-text {
+    font-size: 1.15rem;
+    margin-bottom: 2rem;
+    opacity: 0.95;
+  }
+
+  .cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-cta-primary {
+    background: white;
+    color: var(--secondary-color, #1E88E5);
+    border: none;
+    padding: 0.875rem 2rem;
+    border-radius: 50px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .btn-cta-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    color: var(--secondary-color, #1E88E5);
+  }
+
+  .btn-cta-secondary {
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+    padding: 0.875rem 2rem;
+    border-radius: 50px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .btn-cta-secondary:hover {
+    background: white;
+    color: var(--secondary-color, #1E88E5);
+    transform: translateY(-2px);
+  }
+
+  /* Responsive */
+  @@media (max-width: 768px) {
+    .about-hero {
+      padding: 3rem 0 2.5rem;
+    }
+
+    .about-hero h1 {
+      font-size: 2rem;
+    }
+
+    .section-title {
+      font-size: 2rem;
+    }
+
+    .stats-container {
+      padding: 3rem 1.5rem;
+    }
+
+    .stat-value {
+      font-size: 2.5rem;
+    }
+
+    .cta-card {
+      padding: 3rem 1.5rem;
+    }
+
+    .cta-title {
+      font-size: 1.5rem;
+    }
+
+    .cta-buttons {
+      flex-direction: column;
+    }
+
+    .btn-cta-primary,
+    .btn-cta-secondary {
+      width: 100%;
+    }
+  }
+</style>

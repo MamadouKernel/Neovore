@@ -453,6 +453,11 @@
           </a>
         </li>
         <li class="nav-item">
+          <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "About" ? "active" : "")" href="/a-propos">
+            <i class="bi bi-info-circle me-1" aria-hidden="true"></i>À propos
+          </a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Devis" ? "active" : "")" href="/devis">
             <i class="bi bi-file-earmark-text me-1" aria-hidden="true"></i>Devis
           </a>
@@ -486,6 +491,7 @@
           <li class="mb-2"><a href="/Services"><i class="bi bi-arrow-right me-2" aria-hidden="true"></i>Nos services</a></li>
           <li class="mb-2"><a href="/Produits"><i class="bi bi-arrow-right me-2" aria-hidden="true"></i>Nos produits</a></li>
           <li class="mb-2"><a href="/Realisations"><i class="bi bi-arrow-right me-2" aria-hidden="true"></i>Réalisations</a></li>
+          <li class="mb-2"><a href="/a-propos"><i class="bi bi-arrow-right me-2" aria-hidden="true"></i>À propos</a></li>
           <li class="mb-2"><a href="/devis"><i class="bi bi-arrow-right me-2" aria-hidden="true"></i>Demander un devis</a></li>
         </ul>
       </div>

@@ -348,6 +348,61 @@
         </div>
       </div>
 
+      <div class="col-12 mt-4">
+        <h3 class="h5 fw-bold mb-3">
+          <i class="bi bi-info-circle me-2" style="color: #FF6B35;"></i>Contenu de la page "À propos"
+        </h3>
+        <p class="text-muted small mb-3">Personnalisez le contenu de la page "À propos" de votre site.</p>
+      </div>
+
+      <div class="col-12">
+        <label class="form-label fw-bold">Texte de la section "Notre Histoire"</label>
+        <textarea asp-for="TexteHistoire" class="form-control" rows="6" placeholder="Décrivez l'histoire de votre entreprise, sa mission, sa vision et ses valeurs..."></textarea>
+        <small class="text-muted">Ce texte remplacera le texte par défaut dans la section "Notre Histoire" de la page À propos. Laissez vide pour utiliser le texte par défaut.</small>
+        <span asp-validation-for="TexteHistoire" class="text-danger small"></span>
+      </div>
+
+      <div class="col-12 mt-4">
+        <h4 class="h6 fw-bold mb-3">Personnalisation des valeurs</h4>
+        <p class="text-muted small mb-3">Personnalisez les descriptions des 4 valeurs affichées sur la page À propos.</p>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label fw-bold">
+          <i class="bi bi-star-fill me-2" style="color: #FF6B35;"></i>Excellence
+        </label>
+        <textarea asp-for="TexteValeurExcellence" class="form-control" rows="3" placeholder="Nous visons l'excellence dans chaque projet que nous entreprenons."></textarea>
+        <small class="text-muted">Description de la valeur "Excellence"</small>
+        <span asp-validation-for="TexteValeurExcellence" class="text-danger small"></span>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label fw-bold">
+          <i class="bi bi-lightbulb-fill me-2" style="color: #FF6B35;"></i>Innovation
+        </label>
+        <textarea asp-for="TexteValeurInnovation" class="form-control" rows="3" placeholder="Nous adoptons les dernières technologies pour offrir des solutions modernes."></textarea>
+        <small class="text-muted">Description de la valeur "Innovation"</small>
+        <span asp-validation-for="TexteValeurInnovation" class="text-danger small"></span>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label fw-bold">
+          <i class="bi bi-heart-fill me-2" style="color: #FF6B35;"></i>Engagement
+        </label>
+        <textarea asp-for="TexteValeurEngagement" class="form-control" rows="3" placeholder="Nous nous engageons à dépasser les attentes de nos clients."></textarea>
+        <small class="text-muted">Description de la valeur "Engagement"</small>
+        <span asp-validation-for="TexteValeurEngagement" class="text-danger small"></span>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label fw-bold">
+          <i class="bi bi-shield-check-fill me-2" style="color: #FF6B35;"></i>Fiabilité
+        </label>
+        <textarea asp-for="TexteValeurFiabilite" class="form-control" rows="3" placeholder="Vous pouvez compter sur nous pour des solutions durables et fiables."></textarea>
+        <small class="text-muted">Description de la valeur "Fiabilité"</small>
+        <span asp-validation-for="TexteValeurFiabilite" class="text-danger small"></span>
+      </div>
+
       <div class="mt-4 d-flex gap-2">
         <button class="btn btn-primary" type="submit">
           <i class="bi bi-check-circle me-2"></i>Sauvegarder les paramètres

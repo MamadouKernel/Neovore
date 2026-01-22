@@ -36,4 +36,11 @@ public class SiteSettings : BaseEntity
     public decimal? Latitude { get; set; }                        // Latitude (extraite depuis le lien Google Maps ou géocodée depuis l'adresse)
     public decimal? Longitude { get; set; }                       // Longitude (extraite depuis le lien Google Maps ou géocodée depuis l'adresse)
     public bool AfficherCarte { get; set; } = false;              // Afficher la carte sur le site
+    
+    // Contenu de la page À propos
+    public string? TexteHistoire { get; set; }                    // Texte personnalisé pour la section "Notre Histoire"
+    public string? TexteValeurExcellence { get; set; }            // Description personnalisée pour la valeur "Excellence"
+    public string? TexteValeurInnovation { get; set; }            // Description personnalisée pour la valeur "Innovation"
+    public string? TexteValeurEngagement { get; set; }             // Description personnalisée pour la valeur "Engagement"
+    public string? TexteValeurFiabilite { get; set; }             // Description personnalisée pour la valeur "Fiabilité"
 }

@@ -142,6 +142,42 @@ using (var scope = app.Services.CreateScope())
                     ALTER TABLE ""SiteSettings"" ADD COLUMN ""GoogleMapsIframe"" text NULL;
                 END IF;
                 
+                -- Contenu page À propos
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns 
+                    WHERE table_name = 'SiteSettings' AND column_name = 'TexteHistoire'
+                ) THEN
+                    ALTER TABLE ""SiteSettings"" ADD COLUMN ""TexteHistoire"" text NULL;
+                END IF;
+                
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns 
+                    WHERE table_name = 'SiteSettings' AND column_name = 'TexteValeurExcellence'
+                ) THEN
+                    ALTER TABLE ""SiteSettings"" ADD COLUMN ""TexteValeurExcellence"" text NULL;
+                END IF;
+                
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns 
+                    WHERE table_name = 'SiteSettings' AND column_name = 'TexteValeurInnovation'
+                ) THEN
+                    ALTER TABLE ""SiteSettings"" ADD COLUMN ""TexteValeurInnovation"" text NULL;
+                END IF;
+                
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns 
+                    WHERE table_name = 'SiteSettings' AND column_name = 'TexteValeurEngagement'
+                ) THEN
+                    ALTER TABLE ""SiteSettings"" ADD COLUMN ""TexteValeurEngagement"" text NULL;
+                END IF;
+                
+                IF NOT EXISTS (
+                    SELECT 1 FROM information_schema.columns 
+                    WHERE table_name = 'SiteSettings' AND column_name = 'TexteValeurFiabilite'
+                ) THEN
+                    ALTER TABLE ""SiteSettings"" ADD COLUMN ""TexteValeurFiabilite"" text NULL;
+                END IF;
+                
                 -- Géolocalisation
                 IF NOT EXISTS (
                     SELECT 1 FROM information_schema.columns 
