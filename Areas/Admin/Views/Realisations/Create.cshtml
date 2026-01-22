@@ -57,6 +57,18 @@
           <input type="file" name="imageFiles" accept="image/*" multiple class="form-control" />
           <small class="text-muted">Vous pouvez sélectionner plusieurs images. Formats acceptés : JPG, PNG, GIF</small>
         </div>
+
+        <div class="col-12">
+          <label class="form-label fw-bold">Vidéos</label>
+          <input type="file" name="videoFiles" accept="video/*" multiple class="form-control" />
+          <small class="text-muted">Vous pouvez sélectionner plusieurs vidéos. Formats acceptés : MP4, WebM, OGG</small>
+        </div>
+
+        <div class="col-12">
+          <label class="form-label fw-bold">Fichiers de sous-titres (optionnel)</label>
+          <input type="file" name="subtitleFiles" accept=".vtt,.srt" multiple class="form-control" />
+          <small class="text-muted">Fichiers de sous-titres pour les vidéos. Formats acceptés : VTT, SRT. Les sous-titres seront associés aux vidéos dans l'ordre de sélection.</small>
+        </div>
       </div>
 
       <div class="mt-4 d-flex gap-2">

@@ -56,6 +56,18 @@
           <input type="file" name="imageFiles" accept="image/*" multiple class="form-control" />
           <small class="text-muted">Ajouter de nouvelles images à la galerie</small>
         </div>
+
+        <div class="col-12">
+          <label class="form-label fw-bold">Ajouter des vidéos</label>
+          <input type="file" name="videoFiles" accept="video/*" multiple class="form-control" />
+          <small class="text-muted">Ajouter de nouvelles vidéos. Formats acceptés : MP4, WebM, OGG</small>
+        </div>
+
+        <div class="col-12">
+          <label class="form-label fw-bold">Fichiers de sous-titres (optionnel)</label>
+          <input type="file" name="subtitleFiles" accept=".vtt,.srt" multiple class="form-control" />
+          <small class="text-muted">Fichiers de sous-titres pour les nouvelles vidéos. Formats acceptés : VTT, SRT</small>
+        </div>
       </div>
 
       <div class="mt-4 d-flex gap-2">
@@ -75,17 +87,31 @@
   <div class="admin-card">
     <div class="card-body p-4">
       <h3 class="h5 fw-bold mb-4">
-        <i class="bi bi-images me-2"></i>Galerie d'images
+        <i class="bi bi-images me-2"></i>Galerie de médias
       </h3>
       <div class="row g-3">
         @foreach (var media in Model.Medias.OrderBy(m => m.Ordre))
         {
           <div class="col-md-3">
             <div class="position-relative">
-              <img src="@media.Url" alt="@media.Alt" class="img-fluid rounded border" style="height: 200px; width: 100%; object-fit: cover;" />
+              @if (media.Type == "video")
+              {
+                <video class="img-fluid rounded border" style="height: 200px; width: 100%; object-fit: cover;" controls>
+                  <source src="@media.Url" type="video/mp4">
+                  <track kind="subtitles" src="@media.SousTitresUrl" srclang="fr" label="Français" default="@(!string.IsNullOrEmpty(media.SousTitresUrl))">
+                  Votre navigateur ne supporte pas la lecture de vidéos.
+                </video>
+                <span class="badge bg-primary position-absolute top-0 start-0 m-2">
+                  <i class="bi bi-play-circle me-1"></i>Vidéo
+                </span>
+              }
+              else
+              {
+                <img src="@media.Url" alt="@media.Alt" class="img-fluid rounded border" style="height: 200px; width: 100%; object-fit: cover;" />
+              }
               <form method="post" action="/Admin/Realisations/DeleteMedia/@media.Id" class="position-absolute top-0 end-0 m-2">
                 @Html.AntiForgeryToken()
-                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer cette image ?');">
+                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Supprimer ce média ?');">
                   <i class="bi bi-trash"></i>
                 </button>
               </form>

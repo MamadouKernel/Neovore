@@ -2,73 +2,450 @@
 @{
     ViewData["Title"] = "Nos réalisations - NÉOVORE";
 }
-<div class="container py-4 py-lg-5">
-  <div class="row mb-5 mb-lg-6">
-    <div class="col-lg-8 mx-auto text-center">
-      <h1 class="display-4 fw-bold mb-3">
-        <i class="bi bi-trophy-fill me-3" style="background: linear-gradient(135deg, #1E88E5 0%, #1565C0 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>Nos réalisations
-      </h1>
-      <p class="lead text-muted">
-        Découvrez nos projets récents et la qualité de nos réalisations pour nos clients.
-      </p>
+<div class="realisations-page">
+  <!-- Hero Section -->
+  <div class="realisations-hero">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 mx-auto text-center">
+          <div class="hero-icon mb-4">
+            <i class="bi bi-trophy-fill"></i>
+          </div>
+          <h1 class="display-3 fw-bold mb-4">Nos Réalisations</h1>
+          <p class="lead text-muted mb-0">
+            Découvrez nos projets récents et la qualité de nos réalisations pour nos clients.
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="row g-4 g-lg-5">
-    @foreach (var r in Model)
+  <!-- Réalisations Grid -->
+  <div class="container py-5">
+    @if (Model.Any())
     {
-      <div class="col-md-6 col-lg-4">
-        <div class="card h-100 border-0 shadow-sm overflow-hidden">
-          @if (r.Medias?.Any() == true)
-          {
-            <div style="height: 250px; overflow: hidden;">
-              <img src="@r.Medias.OrderBy(x => x.Ordre).First().Url" 
-                   alt="@r.Medias.OrderBy(x => x.Ordre).First().Alt" 
-                   class="img-fluid w-100 h-100" 
-                   style="object-fit: cover; transition: transform 0.3s ease;">
+      <div class="row g-4 g-lg-5">
+        @foreach (var r in Model)
+        {
+          <div class="col-md-6 col-lg-4">
+            <div class="realisation-card">
+              <a href="/realisations/@r.Slug" class="realisation-link">
+                <div class="realisation-image-wrapper">
+                  @if (r.Medias?.Any() == true)
+                  {
+                    var firstMedia = r.Medias.OrderBy(x => x.Ordre).First();
+                    @if (firstMedia.Type == "video")
+                    {
+                      <div class="realisation-video-thumb">
+                        <video class="w-100 h-100" style="object-fit: cover;" muted>
+                          <source src="@firstMedia.Url" type="video/mp4">
+                        </video>
+                        <div class="video-overlay">
+                          <i class="bi bi-play-circle-fill"></i>
+                        </div>
+                        <span class="media-badge video-badge">
+                          <i class="bi bi-play-circle me-1"></i>Vidéo
+                        </span>
+                      </div>
+                    }
+                    else
+                    {
+                      <div class="realisation-image">
+                        <img src="@firstMedia.Url" 
+                             alt="@firstMedia.Alt" 
+                             class="w-100 h-100" 
+                             style="object-fit: cover;">
+                        <span class="media-badge image-badge">
+                          <i class="bi bi-image me-1"></i>Photo
+                        </span>
+                      </div>
+                    }
+                    @if (r.Medias.Count > 1)
+                    {
+                      <div class="media-count-badge">
+                        <i class="bi bi-images me-1"></i>@r.Medias.Count
+                      </div>
+                    }
+                  }
+                  else
+                  {
+                    <div class="realisation-placeholder">
+                      <i class="bi bi-image"></i>
+                    </div>
+                  }
+                  <div class="realisation-overlay">
+                    <span class="btn-view">
+                      <i class="bi bi-arrow-right me-2"></i>Voir les détails
+                    </span>
+                  </div>
+                </div>
+                
+                <div class="realisation-content">
+                  <div class="realisation-badge">
+                    <i class="bi bi-building me-1"></i>@r.Secteur
+                  </div>
+                  <h3 class="realisation-title">@r.Titre</h3>
+                  @if (!string.IsNullOrWhiteSpace(r.Description))
+                  {
+                    <p class="realisation-description">
+                      @if (r.Description.Length > 120)
+                      {
+                        @r.Description.Substring(0, Math.Min(120, r.Description.Length))<text>...</text>
+                      }
+                      else
+                      {
+                        @r.Description
+                      }
+                    </p>
+                  }
+                </div>
+              </a>
             </div>
-          }
-          else
-          {
-            <div style="height: 250px; background: linear-gradient(135deg, #E63946 0%, #F77F00 100%); display: flex; align-items: center; justify-content: center;">
-              <i class="bi bi-image text-white" style="font-size: 4rem; opacity: 0.5;"></i>
-            </div>
-          }
-          <div class="card-body p-4 p-lg-5">
-            <span class="badge bg-primary mb-2" style="border-radius: 6px;">
-              <i class="bi bi-building me-1"></i>@r.Secteur
-            </span>
-            <h2 class="h5 fw-bold mb-3">@r.Titre</h2>
-            @if (!string.IsNullOrWhiteSpace(r.Description) && r.Description.Length > 100)
-            {
-              <p class="text-muted mb-4" style="min-height: 60px;">
-                @r.Description.Substring(0, Math.Min(100, r.Description.Length))...
-              </p>
-            }
-            else if (!string.IsNullOrWhiteSpace(r.Description))
-            {
-              <p class="text-muted mb-4" style="min-height: 60px;">@r.Description</p>
-            }
-            <a class="btn btn-primary w-100" href="/realisations/@r.Slug" style="border-radius: 8px;">
-              Voir les détails <i class="bi bi-arrow-right ms-1"></i>
-            </a>
           </div>
+        }
+      </div>
+    }
+    else
+    {
+      <div class="empty-state">
+        <div class="empty-icon">
+          <i class="bi bi-inbox"></i>
         </div>
+        <h3 class="empty-title">Aucune réalisation disponible</h3>
+        <p class="empty-text">Aucune réalisation n'est disponible pour le moment.</p>
       </div>
     }
   </div>
-
-  @if (!Model.Any())
-  {
-    <div class="text-center py-5">
-      <i class="bi bi-inbox" style="font-size: 4rem; color: #dee2e6;"></i>
-      <p class="text-muted mt-3">Aucune réalisation disponible pour le moment.</p>
-    </div>
-  }
 </div>
 
 <style>
-  .card:hover img {
-    transform: scale(1.1);
+  .realisations-page {
+    min-height: 100vh;
+    background: linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%);
+  }
+
+  /* Hero Section */
+  .realisations-hero {
+    background: linear-gradient(135deg, var(--primary-color, #FF6B35) 0%, var(--primary-dark, #E63946) 100%);
+    padding: 5rem 0 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .realisations-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>');
+    opacity: 0.3;
+  }
+
+  .realisations-hero .container {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-icon {
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    margin: 0 auto;
+  }
+
+  .hero-icon i {
+    font-size: 2.5rem;
+    color: white;
+  }
+
+  .realisations-hero h1 {
+    color: white;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .realisations-hero .lead {
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 1.25rem;
+  }
+
+  /* Realisation Card */
+  .realisation-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .realisation-card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  .realisation-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  /* Image/Video Wrapper */
+  .realisation-image-wrapper {
+    position: relative;
+    height: 280px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+
+  .realisation-image,
+  .realisation-video-thumb {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  .realisation-image img,
+  .realisation-video-thumb video {
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .realisation-card:hover .realisation-image img,
+  .realisation-card:hover .realisation-video-thumb video {
+    transform: scale(1.15);
+  }
+
+  .realisation-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--primary-color, #FF6B35) 0%, var(--primary-dark, #E63946) 100%);
+  }
+
+  .realisation-placeholder i {
+    font-size: 4rem;
+    color: rgba(255, 255, 255, 0.3);
+  }
+
+  /* Media Badges */
+  .media-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    backdrop-filter: blur(10px);
+    z-index: 2;
+  }
+
+  .image-badge {
+    background: rgba(30, 136, 229, 0.9);
+    color: white;
+  }
+
+  .video-badge {
+    background: rgba(255, 107, 53, 0.9);
+    color: white;
+  }
+
+  .media-count-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    backdrop-filter: blur(10px);
+    z-index: 2;
+  }
+
+  /* Video Overlay */
+  .video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .realisation-card:hover .video-overlay {
+    opacity: 1;
+  }
+
+  .video-overlay i {
+    font-size: 3rem;
+    color: white;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Overlay on Hover */
+  .realisation-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.9) 0%, rgba(230, 57, 70, 0.9) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 3;
+  }
+
+  .realisation-card:hover .realisation-overlay {
+    opacity: 1;
+  }
+
+  .btn-view {
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding: 0.75rem 1.5rem;
+    border: 2px solid white;
+    border-radius: 50px;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.3s ease;
+  }
+
+  .realisation-card:hover .btn-view {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Content */
+  .realisation-content {
+    padding: 1.75rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .realisation-badge {
+    display: inline-block;
+    padding: 0.4rem 0.9rem;
+    background: linear-gradient(135deg, var(--secondary-color, #1E88E5) 0%, var(--secondary-color, #1E88E5) 100%);
+    color: white;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    width: fit-content;
+  }
+
+  .realisation-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: #2d3748;
+    line-height: 1.3;
+  }
+
+  .realisation-description {
+    color: #64748b;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0;
+    flex-grow: 1;
+  }
+
+  /* Empty State */
+  .empty-state {
+    text-align: center;
+    padding: 5rem 2rem;
+  }
+
+  .empty-icon {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 2rem;
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .empty-icon i {
+    font-size: 4rem;
+    color: #cbd5e1;
+  }
+
+  .empty-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #334155;
+    margin-bottom: 0.75rem;
+  }
+
+  .empty-text {
+    color: #64748b;
+    font-size: 1.1rem;
+  }
+
+  /* Responsive */
+  @@media (max-width: 768px) {
+    .realisations-hero {
+      padding: 3rem 0 2.5rem;
+    }
+
+    .realisations-hero h1 {
+      font-size: 2rem;
+    }
+
+    .realisation-image-wrapper {
+      height: 220px;
+    }
+
+    .realisation-content {
+      padding: 1.25rem;
+    }
+
+    .realisation-title {
+      font-size: 1.2rem;
+    }
   }
 </style>
+
+<script>
+  // Auto-play video thumbnails on hover
+  document.addEventListener('DOMContentLoaded', function() {
+    const videoThumbs = document.querySelectorAll('.realisation-video-thumb video');
+    videoThumbs.forEach(video => {
+      const card = video.closest('.realisation-card');
+      card.addEventListener('mouseenter', () => {
+        video.play().catch(() => {});
+      });
+      card.addEventListener('mouseleave', () => {
+        video.pause();
+        video.currentTime = 0;
+      });
+    });
+  });
+</script>

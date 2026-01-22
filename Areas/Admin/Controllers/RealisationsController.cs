@@ -41,7 +41,7 @@ public class RealisationsController : Controller
     }
 
     [HttpPost, ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(Realisation model, List<IFormFile>? imageFiles, CancellationToken ct)
+    public async Task<IActionResult> Create(Realisation model, List<IFormFile>? imageFiles, List<IFormFile>? videoFiles, List<IFormFile>? subtitleFiles, CancellationToken ct)
     {
         if (string.IsNullOrWhiteSpace(model.Slug))
             model.Slug = SlugHelper.ToSlug(model.Titre);
@@ -51,10 +51,11 @@ public class RealisationsController : Controller
         await _repo.AddAsync(model);
         await _repo.SaveChangesAsync();
 
+        int ordre = 0;
+
         // Upload images si fournies
         if (imageFiles != null && imageFiles.Any(f => f.Length > 0))
         {
-            int ordre = 0;
             foreach (var file in imageFiles.Where(f => f.Length > 0))
             {
                 var imageUrl = await _fileStorage.SaveImageAsync(file, "realisations", ct);
@@ -63,10 +64,51 @@ public class RealisationsController : Controller
                     Url = imageUrl,
                     Alt = model.Titre,
                     Ordre = ordre++,
+                    Type = "image",
                     RealisationId = model.Id
                 };
                 await _mediaRepo.AddAsync(media);
             }
+        }
+
+        // Upload vidéos si fournies
+        if (videoFiles != null && videoFiles.Any(f => f.Length > 0))
+        {
+            foreach (var file in videoFiles.Where(f => f.Length > 0))
+            {
+                var videoUrl = await _fileStorage.SaveVideoAsync(file, "realisations", ct);
+                var media = new Media
+                {
+                    Url = videoUrl,
+                    Alt = model.Titre,
+                    Ordre = ordre++,
+                    Type = "video",
+                    DescriptionVideo = model.Description,
+                    RealisationId = model.Id
+                };
+                await _mediaRepo.AddAsync(media);
+            }
+        }
+
+        // Upload sous-titres si fournis (associés à la dernière vidéo)
+        if (subtitleFiles != null && subtitleFiles.Any(f => f.Length > 0))
+        {
+            var videos = await _mediaRepo.Query()
+                .Where(m => m.RealisationId == model.Id && m.Type == "video")
+                .OrderByDescending(m => m.Ordre)
+                .ToListAsync();
+            
+            var subtitleList = subtitleFiles.Where(f => f.Length > 0).ToList();
+            for (int i = 0; i < subtitleList.Count && i < videos.Count; i++)
+            {
+                var subtitleUrl = await _fileStorage.SaveSubtitleAsync(subtitleList[i], "realisations", ct);
+                videos[i].SousTitresUrl = subtitleUrl;
+                await _mediaRepo.UpdateAsync(videos[i]);
+            }
+        }
+
+        if (ordre > 0)
+        {
             await _mediaRepo.SaveChangesAsync();
         }
 
@@ -84,7 +126,7 @@ public class RealisationsController : Controller
     }
 
     [HttpPost, ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(Realisation model, List<IFormFile>? imageFiles, CancellationToken ct)
+    public async Task<IActionResult> Edit(Realisation model, List<IFormFile>? imageFiles, List<IFormFile>? videoFiles, List<IFormFile>? subtitleFiles, CancellationToken ct)
     {
         if (string.IsNullOrWhiteSpace(model.Slug))
             model.Slug = SlugHelper.ToSlug(model.Titre);
@@ -101,14 +143,14 @@ public class RealisationsController : Controller
             return View(model);
         }
 
+        var existingMedias = await _mediaRepo.Query()
+            .Where(m => m.RealisationId == model.Id)
+            .ToListAsync();
+        int maxOrdre = existingMedias.Any() ? existingMedias.Max(m => m.Ordre) + 1 : 0;
+
         // Upload nouvelles images si fournies
         if (imageFiles != null && imageFiles.Any(f => f.Length > 0))
         {
-            var existingMedias = await _mediaRepo.Query()
-                .Where(m => m.RealisationId == model.Id)
-                .ToListAsync();
-            int maxOrdre = existingMedias.Any() ? existingMedias.Max(m => m.Ordre) + 1 : 0;
-
             foreach (var file in imageFiles.Where(f => f.Length > 0))
             {
                 var imageUrl = await _fileStorage.SaveImageAsync(file, "realisations", ct);
@@ -117,10 +159,54 @@ public class RealisationsController : Controller
                     Url = imageUrl,
                     Alt = model.Titre,
                     Ordre = maxOrdre++,
+                    Type = "image",
                     RealisationId = model.Id
                 };
                 await _mediaRepo.AddAsync(media);
             }
+        }
+
+        // Upload nouvelles vidéos si fournies
+        if (videoFiles != null && videoFiles.Any(f => f.Length > 0))
+        {
+            foreach (var file in videoFiles.Where(f => f.Length > 0))
+            {
+                var videoUrl = await _fileStorage.SaveVideoAsync(file, "realisations", ct);
+                var media = new Media
+                {
+                    Url = videoUrl,
+                    Alt = model.Titre,
+                    Ordre = maxOrdre++,
+                    Type = "video",
+                    DescriptionVideo = model.Description,
+                    RealisationId = model.Id
+                };
+                await _mediaRepo.AddAsync(media);
+            }
+        }
+
+        // Upload sous-titres si fournis (associés aux nouvelles vidéos)
+        if (subtitleFiles != null && subtitleFiles.Any(f => f.Length > 0) && videoFiles != null && videoFiles.Any(f => f.Length > 0))
+        {
+            var newVideos = await _mediaRepo.Query()
+                .Where(m => m.RealisationId == model.Id && m.Type == "video")
+                .OrderByDescending(m => m.Ordre)
+                .Take(subtitleFiles.Count(f => f.Length > 0))
+                .ToListAsync();
+            
+            var subtitleList = subtitleFiles.Where(f => f.Length > 0).ToList();
+            for (int i = 0; i < subtitleList.Count && i < newVideos.Count; i++)
+            {
+                var subtitleUrl = await _fileStorage.SaveSubtitleAsync(subtitleList[i], "realisations", ct);
+                newVideos[i].SousTitresUrl = subtitleUrl;
+                await _mediaRepo.UpdateAsync(newVideos[i]);
+            }
+        }
+
+        if ((imageFiles != null && imageFiles.Any(f => f.Length > 0)) || 
+            (videoFiles != null && videoFiles.Any(f => f.Length > 0)) ||
+            (subtitleFiles != null && subtitleFiles.Any(f => f.Length > 0)))
+        {
             await _mediaRepo.SaveChangesAsync();
         }
 
